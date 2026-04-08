@@ -6,7 +6,7 @@
 <title>CropSense — My Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,900;1,9..144,700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,900;1,9..144,700&family=Instrument+Sans:wght@400;500;600&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <style>
@@ -21,6 +21,9 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
 body{font-family:'Instrument Sans',sans-serif;background:#f0ece4;color:var(--text);overflow-x:hidden;cursor:none;display:flex;min-height:100vh;}
+body.hi-lang {
+  font-family: 'Noto Sans Devanagari', 'Instrument Sans', sans-serif;
+}
 
 /* CURSOR */
 #cursor{width:10px;height:10px;background:var(--bright);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .1s,background .15s;}
@@ -310,6 +313,7 @@ body:has(a:hover) #cursor-ring,body:has(button:hover) #cursor-ring{transform:tra
 </style>
 </head>
 <body>
+<script src="js/i18n.js"></script>
 <div id="cursor"></div>
 <div id="cursor-ring"></div>
 <div class="toast" id="toast"><i class="fas fa-check-circle"></i><span id="toastMsg"></span></div>
@@ -342,31 +346,31 @@ body:has(a:hover) #cursor-ring,body:has(button:hover) #cursor-ring{transform:tra
   <div class="lang-toggle">
     <span class="lang-toggle-label" id="langLabel">Language</span>
     <div class="lang-pill">
-      <button class="lang-opt active" id="langEn" onclick="setLang('en')">EN</button>
-      <button class="lang-opt" id="langHi" onclick="setLang('hi')">हि</button>
+      <button class="lang-opt active" id="langEn" onclick="i18nSetLang('en')">EN</button>
+      <button class="lang-opt" id="langHi" onclick="i18nSetLang('hi')">हि</button>
     </div>
   </div>
   <nav class="sb-nav">
-    <div class="sb-section">Main</div>
-    <a class="sb-item active" onclick="showPage('overview',this)"><i class="fas fa-th-large"></i>Overview</a>
-    <a class="sb-item" onclick="showPage('diagnose',this)"><i class="fas fa-microscope"></i>AI Diagnosis<span class="sb-badge sb-badge-green">New</span></a>
-    <a class="sb-item" onclick="showPage('history',this)"><i class="fas fa-history"></i>My Diagnoses</a>
-    <a class="sb-item" onclick="showPage('crops',this)"><i class="fas fa-seedling"></i>My Crops</a>
-    <a class="sb-item" onclick="showPage('alerts',this)"><i class="fas fa-bell"></i>Alerts<span class="sb-badge">3</span></a>
+    <div class="sb-section" data-i18n="sidebar.main">Main</div>
+    <a class="sb-item active" onclick="showPage('overview',this)"><i class="fas fa-th-large"></i><span data-i18n="sidebar.overview">Overview</span></a>
+    <a class="sb-item" onclick="showPage('diagnose',this)"><i class="fas fa-microscope"></i><span data-i18n="sidebar.diagnose">AI Diagnosis</span><span class="sb-badge sb-badge-green" data-i18n="sidebar.new">New</span></a>
+    <a class="sb-item" onclick="showPage('history',this)"><i class="fas fa-history"></i><span data-i18n="sidebar.history">My Diagnoses</span></a>
+    <a class="sb-item" onclick="showPage('crops',this)"><i class="fas fa-seedling"></i><span data-i18n="sidebar.crops">My Crops</span></a>
+    <a class="sb-item" onclick="showPage('alerts',this)"><i class="fas fa-bell"></i><span data-i18n="sidebar.alerts">Alerts</span><span class="sb-badge">3</span></a>
 
-    <div class="sb-section">Resources</div>
-    <a class="sb-item" href="library.html"><i class="fas fa-book-medical"></i>Disease Library</a>
-    <a class="sb-item" onclick="showPage('saved',this)"><i class="fas fa-heart"></i>Saved Diseases</a>
-    <a class="sb-item" href="blog.html"><i class="fas fa-newspaper"></i>Blog & Alerts</a>
+    <div class="sb-section" data-i18n="sidebar.resources">Resources</div>
+    <a class="sb-item" href="library.html"><i class="fas fa-book-medical"></i><span data-i18n="sidebar.lib">Disease Library</span></a>
+    <a class="sb-item" onclick="showPage('saved',this)"><i class="fas fa-heart"></i><span data-i18n="sidebar.saved">Saved Diseases</span></a>
+    <a class="sb-item" href="blog.html"><i class="fas fa-newspaper"></i><span data-i18n="sidebar.blog">Blog & Alerts</span></a>
 
-    <div class="sb-section">Account</div>
-    <a class="sb-item" onclick="showPage('profile',this)"><i class="fas fa-user-circle"></i>My Profile</a>
-    <a class="sb-item" onclick="showPage('settings',this)"><i class="fas fa-cog"></i>Settings</a>
+    <div class="sb-section" data-i18n="sidebar.account">Account</div>
+    <a class="sb-item" onclick="showPage('profile',this)"><i class="fas fa-user-circle"></i><span data-i18n="sidebar.profile">My Profile</span></a>
+    <a class="sb-item" onclick="showPage('settings',this)"><i class="fas fa-cog"></i><span data-i18n="sidebar.settings">Settings</span></a>
   </nav>
 
   <div class="sb-bottom">
-    <button class="sb-bottom-btn" onclick="showToast('Feedback sent! Thank you 🌱')"><i class="fas fa-comment-alt"></i>Send feedback</button>
-    <button class="sb-bottom-btn" onclick="window.location.href='auth.html'"><i class="fas fa-sign-out-alt"></i>Sign out</button>
+    <button class="sb-bottom-btn" onclick="showToast('Feedback sent! Thank you 🌱')"><i class="fas fa-comment-alt"></i><span data-i18n="sidebar.feedback">Send feedback</span></button>
+    <button class="sb-bottom-btn" onclick="window.location.href='auth.html'"><i class="fas fa-sign-out-alt"></i><span data-i18n="sidebar.signout">Sign out</span></button>
   </div>
 </aside>
 
@@ -401,23 +405,23 @@ body:has(a:hover) #cursor-ring,body:has(button:hover) #cursor-ring{transform:tra
     <div class="quick-actions">
       <a class="qa-btn" onclick="showPage('diagnose',null)">
         <div class="qa-icon" style="background:var(--pale)"><i class="fas fa-camera" style="color:var(--mid)"></i></div>
-        <div class="qa-label">Diagnose crop</div>
-        <div class="qa-sub">Upload a photo</div>
+        <div class="qa-label" data-i18n="dash.diagnose">Diagnose crop</div>
+        <div class="qa-sub" data-i18n="dash.diagnose.sub">Upload a photo</div>
       </a>
       <a class="qa-btn" href="library.html">
         <div class="qa-icon" style="background:var(--blue-pale)"><i class="fas fa-book-medical" style="color:var(--blue)"></i></div>
-        <div class="qa-label">Disease library</div>
-        <div class="qa-sub">500+ diseases</div>
+        <div class="qa-label" data-i18n="dash.library">Disease library</div>
+        <div class="qa-sub" data-i18n="dash.library.sub">500+ diseases</div>
       </a>
       <a class="qa-btn" onclick="showPage('alerts',null)">
         <div class="qa-icon" style="background:var(--red-pale)"><i class="fas fa-bell" style="color:var(--red)"></i></div>
-        <div class="qa-label">View alerts</div>
-        <div class="qa-sub">3 in your area</div>
+        <div class="qa-label" data-i18n="dash.viewalerts">View alerts</div>
+        <div class="qa-sub" data-i18n="dash.viewalerts.sub">3 in your area</div>
       </a>
       <a class="qa-btn" href="blog.html">
         <div class="qa-icon" style="background:var(--purple-pale)"><i class="fas fa-newspaper" style="color:var(--purple)"></i></div>
-        <div class="qa-label">Read blog</div>
-        <div class="qa-sub">Latest articles</div>
+        <div class="qa-label" data-i18n="dash.readblog">Read blog</div>
+        <div class="qa-sub" data-i18n="dash.readblog.sub">Latest articles</div>
       </a>
     </div>
 
@@ -426,26 +430,26 @@ body:has(a:hover) #cursor-ring,body:has(button:hover) #cursor-ring{transform:tra
       <div class="stat-card sc-green">
         <div class="stat-icon si-green"><i class="fas fa-microscope"></i></div>
         <div class="stat-num" id="statDiag">0</div>
-        <div class="stat-label">Total diagnoses</div>
-        <div class="stat-change sc-up"><i class="fas fa-arrow-up"></i>+4 this week</div>
+        <div class="stat-label" data-i18n="stat.diag">Total diagnoses</div>
+        <div class="stat-change sc-up"><i class="fas fa-arrow-up"></i><span data-i18n="stat.diag.sub">+4 this week</span></div>
       </div>
       <div class="stat-card sc-amber">
         <div class="stat-icon si-amber"><i class="fas fa-seedling"></i></div>
         <div class="stat-num" id="statCrops">0</div>
-        <div class="stat-label">Active crops</div>
-        <div class="stat-change sc-up"><i class="fas fa-arrow-up"></i>Wheat season peak</div>
+        <div class="stat-label" data-i18n="stat.crops">Active crops</div>
+        <div class="stat-change sc-up"><i class="fas fa-arrow-up"></i><span data-i18n="stat.crops.sub">Wheat season peak</span></div>
       </div>
       <div class="stat-card sc-red">
         <div class="stat-icon si-red"><i class="fas fa-exclamation-triangle"></i></div>
         <div class="stat-num" id="statAlerts">0</div>
-        <div class="stat-label">Active alerts</div>
-        <div class="stat-change sc-down"><i class="fas fa-arrow-up"></i>+1 since yesterday</div>
+        <div class="stat-label" data-i18n="stat.alerts">Active alerts</div>
+        <div class="stat-change sc-down"><i class="fas fa-arrow-up"></i><span data-i18n="stat.alerts.sub">+1 since yesterday</span></div>
       </div>
       <div class="stat-card sc-blue">
         <div class="stat-icon si-blue"><i class="fas fa-shield-alt"></i></div>
         <div class="stat-num" id="statSaved">0</div>
-        <div class="stat-label">Diseases saved</div>
-        <div class="stat-change sc-up"><i class="fas fa-arrow-up"></i>+2 this month</div>
+        <div class="stat-label" data-i18n="stat.saved">Diseases saved</div>
+        <div class="stat-change sc-up"><i class="fas fa-arrow-up"></i><span data-i18n="stat.saved.sub">+2 this month</span></div>
       </div>
     </div>
 
@@ -852,7 +856,7 @@ const ANTHROPIC_API = 'https://api.anthropic.com/v1/messages';
 const MODEL = 'claude-sonnet-4-20250514';
 const WEATHER_URL = 'https://api.open-meteo.com/v1/forecast?latitude=22.7196&longitude=75.8577&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,uv_index&timezone=Asia%2FKolkata';
 
-let currentLang = 'en';
+let currentLang = i18nConfig.currentLang;
 let chatHistory = [];
 let weatherData = null;
 let alertsGenerated = false;
@@ -925,31 +929,31 @@ function showPage(id,el){
   document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
   if(el)el.classList.add('active');
-  document.getElementById('topbarTitle').textContent=T('pages')[id]||id;
+  
+  const s = S[currentLang];
+  document.getElementById('topbarTitle').textContent = s.pages[id] || id;
+  if(id==='overview') updateDateTime();
+  
   if(id==='alerts'&&!alertsGenerated&&weatherData) generateDynamicAlerts(weatherData);
 }
 
-// ── LANGUAGE TOGGLE ──────────────────────────────
-function setLang(lang){
-  currentLang=lang;
-  document.getElementById('langEn').classList.toggle('active',lang==='en');
-  document.getElementById('langHi').classList.toggle('active',lang==='hi');
-  const s=S[lang];
-  // Update all static text IDs
-  const upd=(id,key)=>{const el=document.getElementById(id);if(el&&s[key])el.textContent=s[key];};
-  upd('langLabel','langLabel');
-  upd('diagTitle','diagTitle'); upd('diagSub','diagSub');
-  upd('uploadTitle','uploadTitle'); upd('uploadSub','uploadSub');
-  upd('uploadBtnText','uploadBtn'); upd('sampleLabel','sampleLabel');
-  upd('chatTitle','chatTitle'); upd('chatBadge','chatBadge');
-  upd('chatWelcomeMsg','chatWelcome');
-  document.getElementById('chatInput').placeholder=s.chatPlaceholder;
+// ── LANGUAGE SYNC ──────────────────────────────
+document.addEventListener('languageChanged', () => {
+  currentLang = i18nConfig.currentLang;
+  const s = S[currentLang];
+  
+  // Sync placeholders
+  document.getElementById('chatInput').placeholder = s.chatPlaceholder;
+  
   buildChatStarters();
   updateDateTime();
-  chatHistory=[];
-  const activePage=document.querySelector('.page.active');
-  if(activePage) document.getElementById('topbarTitle').textContent=s.pages[activePage.id.replace('page-','')]||'';
-}
+  chatHistory = [];
+  
+  const activePage = document.querySelector('.page.active');
+  if(activePage && activePage.id !== 'page-overview') {
+     document.getElementById('topbarTitle').textContent = s.pages[activePage.id.replace('page-','')] || '';
+  }
+});
 
 // ── WEATHER (Open-Meteo, no API key) ─────────────
 const WMO_ICONS={0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',48:'🌫',51:'🌦',53:'🌦',55:'🌧',61:'🌧',63:'🌧',65:'🌧',71:'🌨',73:'🌨',75:'❄️',80:'🌦',81:'🌧',82:'⛈',95:'⛈',96:'⛈',99:'⛈'};

@@ -6,7 +6,7 @@
 <title>CropSense — Disease Library · 500+ Crop Diseases</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,900;1,9..144,700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,900;1,9..144,700&family=Instrument+Sans:wght@400;500;600&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 :root{
@@ -18,6 +18,9 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
 body{font-family:'Instrument Sans',sans-serif;background:var(--cream);color:var(--text);overflow-x:hidden;cursor:none;}
+body.hi-lang {
+  font-family: 'Noto Sans Devanagari', 'Instrument Sans', sans-serif;
+}
 
 /* CURSOR */
 #cursor{width:12px;height:12px;background:var(--bright);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
@@ -208,6 +211,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:72px;padding:0 5%;dis
 </style>
 </head>
 <body>
+<script src="js/i18n.js"></script>
 <div id="cursor"></div>
 <div id="cursor-ring"></div>
 <div class="toast" id="toast"><i class="fas fa-check-circle"></i><span id="toastMsg">Done!</span></div>
@@ -263,11 +267,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:72px;padding:0 5%;dis
     <span class="nav-logo-text">Crop<span>Sense</span></span>
   </a>
   <ul class="nav-links">
-    <li><a href="cropsense_v2.html#features">Features</a></li>
-    <li><a href="#" class="active">Disease Library</a></li>
-    <li><a href="cropsense_v2.html#diagnose">AI Diagnosis</a></li>
-    <li><a href="cropsense_v2.html#pricing">Pricing</a></li>
-    <li><a href="cropsense_v2.html#" class="nav-cta"><i class="fas fa-mobile-alt"></i> Get App</a></li>
+    <li><a href="cropsense_v2.html#features" data-i18n="nav.features">Features</a></li>
+    <li><a href="#" class="active" data-i18n="nav.library">Disease Library</a></li>
+    <li><a href="cropsense_v2.html#diagnose" data-i18n="nav.diagnose">AI Diagnosis</a></li>
+    <li>
+      <div style="display:flex;align-items:center;background:var(--parchment);border-radius:100px;padding:3px;margin-left:8px">
+        <button id="langEn" onclick="i18nSetLang('en')" style="padding:4px 10px;border-radius:100px;border:none;background:transparent;font-size:12px;font-weight:700;color:var(--text-muted);cursor:none">EN</button>
+        <button id="langHi" onclick="i18nSetLang('hi')" style="padding:4px 10px;border-radius:100px;border:none;background:transparent;font-size:12px;font-weight:700;color:var(--text-muted);cursor:none">हि</button>
+      </div>
+    </li>
   </ul>
 </nav>
 
@@ -389,9 +397,9 @@ function showToast(msg){const t=document.getElementById('toast');document.getEle
    DISEASE DATABASE — 48 diseases
 ════════════════════════════════════ */
 const DB=[
-  // WHEAT
-  {id:1,name:'Wheat Yellow Rust',sci:'Puccinia striiformis f. sp. tritici',crop:'wheat',type:'fungal',sev:'high',emoji:'🌾',bg:'#fffbf0',
-   desc:'One of the most damaging wheat diseases worldwide. Yellow-orange stripe patterns form along leaf veins, dramatically reducing photosynthesis and grain filling. Spreads via wind-borne urediniospores across vast distances.',
+  {id:1,name:'Wheat Yellow Rust',name_hi:'गेहूं का पीला रतुआ (Yellow Rust)',sci:'Puccinia striiformis f. sp. tritici',crop:'wheat',type:'fungal',sev:'high',emoji:'🌾',bg:'#fffbf0',
+   desc:'One of the most damaging wheat diseases worldwide. Yellow-orange stripe patterns form along leaf veins.',
+   desc_hi:'दुनिया भर में गेहूं की सबसे खतरनाक बीमारियों में से एक। पत्तियों की नसों के साथ पीले-नारंगी धारीदार पैटर्न बनते हैं।',
    symptoms:['Yellow-orange stripe patterns parallel to leaf veins','Powdery spore masses on leaf surfaces','Leaves turn brown and dry in advanced stages','Reduced grain size and weight','Premature leaf death in severe infections'],
    conditions:'Cool temperatures (10–15°C) and high humidity or dew. Most destructive in North India from November–March.',
    chem:'Propiconazole 25% EC at 0.1% (500–750 ml/ha). Alternatively Tebuconazole 25.9% EC at 0.1%. Repeat after 15 days if needed.',
@@ -399,8 +407,9 @@ const DB=[
    treatSteps:['Remove heavily infected leaves to reduce spore load','Apply fungicide in early morning before 9am','Ensure uniform coverage including leaf undersides','Repeat spray after 15 days if wet weather continues','Monitor for 7 days post-spray'],
    prevSteps:['Plant resistant varieties: HD-3086, PBW-343, K-307','Maintain proper row spacing for air circulation','Avoid excess nitrogen fertiliser','Apply prophylactic fungicide at tillering stage in high-risk zones','Scout fields weekly Nov–Feb']},
 
-  {id:2,name:'Wheat Brown Rust',sci:'Puccinia triticina',crop:'wheat',type:'fungal',sev:'high',emoji:'🌾',bg:'#fff3e8',
-   desc:'Brown rust causes circular to oval orange-brown pustules scattered on leaf surfaces. More common than yellow rust in warmer regions. Can cause 20–40% yield loss in susceptible varieties.',
+  {id:2,name:'Wheat Brown Rust',name_hi:'गेहूं का भूरा रतुआ (Brown Rust)',sci:'Puccinia triticina',crop:'wheat',type:'fungal',sev:'high',emoji:'🌾',bg:'#fff3e8',
+   desc:'Brown rust causes circular to oval orange-brown pustules scattered on leaf surfaces. Can cause 20–40% yield loss.',
+   desc_hi:'भूरा रतुआ पत्तियों की सतह पर गोलाकार से अंडाकार नारंगी-भूरे रंग के दाने बनाता है। इससे 20–40% उपज का नुकसान हो सकता है।',
    symptoms:['Circular orange-brown pustules on upper leaf surface','Random distribution unlike stripe pattern of yellow rust','Dark brown spores visible in late season','Early leaf senescence','Reduced tillering in severe cases'],
    conditions:'Warm temperatures (15–22°C), high humidity. Common in central and peninsular India.',
    chem:'Mancozeb 75% WP at 0.25% or Propiconazole 25% EC at 0.1%. Apply at first pustule appearance.',
@@ -785,11 +794,15 @@ function renderGrid(){
     return;
   }
 
+  const lang = (window.i18nConfig && window.i18nConfig.currentLang) || 'en';
+
   grid.innerHTML=pageData.map((d,i)=>{
     const sevClass=d.sev==='high'?'sp-h':d.sev==='medium'?'sp-m':'sp-l';
     const sevIcon=d.sev==='high'?'exclamation-triangle':d.sev==='medium'?'minus':'check';
     const sevLabel=d.sev==='high'?'High severity':d.sev==='medium'?'Medium':'Low / Manageable';
     const isFaved=favorites.has(d.id);
+    const dName = lang === 'hi' && d.name_hi ? d.name_hi : d.name;
+    const dDesc = lang === 'hi' && d.desc_hi ? d.desc_hi : d.desc;
     return `<div class="dcard" style="animation-delay:${i*.04}s" data-id="${d.id}">
       <div class="dcard-img" style="background:${d.bg}">
         ${d.emoji}
@@ -799,9 +812,9 @@ function renderGrid(){
         </div>
       </div>
       <div class="dcard-body">
-        <h3>${d.name}</h3>
+        <h3>${dName}</h3>
         <div class="dcard-sci">${d.sci}</div>
-        <div class="dcard-desc">${d.desc}</div>
+        <div class="dcard-desc">${dDesc}</div>
         <div class="dcard-footer">
           <span class="sev-pill ${sevClass}"><i class="fas fa-${sevIcon}" style="font-size:8px"></i>${sevLabel}</span>
           <a class="dcard-btn" href="javascript:void(0)" onclick="openModal(${d.id})">Details <i class="fas fa-arrow-right" style="font-size:10px"></i></a>
@@ -812,6 +825,8 @@ function renderGrid(){
 
   renderPagination(totalPages);
 }
+
+document.addEventListener('languageChanged', renderGrid);
 
 /* ── PAGINATION ── */
 function renderPagination(total){
