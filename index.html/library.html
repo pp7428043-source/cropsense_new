@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CropSense — Disease Library · 500+ Crop Diseases</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,900;1,9..144,700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{
+  --forest:#0d2818;--canopy:#1a4731;--mid:#2d6a4f;--bright:#52b788;
+  --lime:#95d5b2;--pale:#d8f3dc;--cream:#f8f4ec;--parchment:#ede8de;
+  --amber:#e07b39;--amber-pale:#fdf0e8;
+  --text:#0d1f15;--text-mid:#2a3d32;--text-muted:#5a7060;--white:#fff;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Instrument Sans',sans-serif;background:var(--cream);color:var(--text);overflow-x:hidden;cursor:none;}
+
+/* CURSOR */
+#cursor{width:12px;height:12px;background:var(--bright);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
+#cursor-ring{width:38px;height:38px;border:1.5px solid var(--bright);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;opacity:.45;transition:transform .4s cubic-bezier(.17,.67,.35,1.2);transform:translate(-50%,-50%);}
+body:has(a:hover) #cursor,body:has(button:hover) #cursor{transform:translate(-50%,-50%) scale(2.5);background:var(--amber);transition:transform .15s,background .2s;}
+body:has(a:hover) #cursor-ring,body:has(button:hover) #cursor-ring{transform:translate(-50%,-50%) scale(1.5);opacity:.25;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:72px;padding:0 5%;display:flex;align-items:center;justify-content:space-between;background:rgba(248,244,236,.92);backdrop-filter:blur(20px) saturate(1.4);border-bottom:1px solid rgba(45,106,79,.1);transition:background .3s;}
+.nav-logo{display:flex;align-items:center;gap:11px;text-decoration:none;}
+.nav-logo-text{font-family:'Fraunces',serif;font-size:22px;font-weight:900;color:var(--forest);letter-spacing:-.5px;}
+.nav-logo-text span{color:var(--mid);}
+.nav-links{display:flex;align-items:center;gap:28px;list-style:none;}
+.nav-links a{text-decoration:none;font-size:14px;font-weight:500;color:var(--text-mid);transition:color .2s;position:relative;}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1.5px;background:var(--mid);transform:scaleX(0);transform-origin:right;transition:transform .3s;}
+.nav-links a:hover{color:var(--mid);}
+.nav-links a:hover::after{transform:scaleX(1);transform-origin:left;}
+.nav-links a.active{color:var(--mid);}
+.nav-links a.active::after{transform:scaleX(1);}
+.nav-cta{background:var(--mid);color:#fff!important;padding:10px 24px;border-radius:100px;font-size:14px;font-weight:600;text-decoration:none;transition:background .2s,transform .15s;box-shadow:0 4px 20px rgba(45,106,79,.3);}
+.nav-cta:hover{background:var(--forest)!important;transform:translateY(-1px);}
+.nav-cta::after{display:none!important;}
+
+/* HERO */
+.lib-hero{background:var(--forest);padding:140px 5% 80px;position:relative;overflow:hidden;}
+.lib-hero::before{content:'';position:absolute;width:700px;height:700px;border-radius:50%;border:1px solid rgba(82,183,136,.08);top:50%;right:-100px;transform:translateY(-50%);animation:rotateSlow 40s linear infinite;}
+.lib-hero::after{content:'LIBRARY';position:absolute;font-family:'Fraunces',serif;font-size:260px;font-weight:900;color:rgba(255,255,255,.025);bottom:-30px;left:-10px;line-height:1;letter-spacing:-12px;pointer-events:none;}
+@keyframes rotateSlow{to{transform:translateY(-50%) rotate(360deg)}}
+.lib-hero-inner{max-width:1200px;margin:0 auto;position:relative;z-index:1;}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(82,183,136,.15);color:var(--bright);padding:7px 16px;border-radius:100px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px;}
+.lib-hero h1{font-family:'Fraunces',serif;font-size:clamp(48px,6vw,80px);font-weight:900;color:var(--white);line-height:1.03;letter-spacing:-2px;margin-bottom:20px;animation:fadeUp .8s .1s cubic-bezier(.22,.68,0,1.2) both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.lib-hero h1 em{font-style:italic;color:var(--bright);}
+.lib-hero p{font-size:18px;color:rgba(255,255,255,.55);max-width:600px;line-height:1.65;animation:fadeUp .8s .25s cubic-bezier(.22,.68,0,1.2) both;}
+
+/* STATS ROW */
+.lib-stats{display:flex;gap:0;margin-top:56px;animation:fadeUp .8s .4s cubic-bezier(.22,.68,0,1.2) both;}
+.lstat{padding:24px 40px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);text-align:center;}
+.lstat:first-child{border-radius:16px 0 0 16px;}
+.lstat:last-child{border-radius:0 16px 16px 0;}
+.lstat-num{font-family:'Fraunces',serif;font-size:32px;font-weight:900;color:var(--bright);line-height:1;}
+.lstat-label{font-size:12px;color:rgba(255,255,255,.4);margin-top:4px;}
+
+/* MAIN LAYOUT */
+.lib-main{max-width:1200px;margin:0 auto;padding:60px 5% 120px;}
+.lib-layout{display:grid;grid-template-columns:280px 1fr;gap:40px;align-items:start;}
+
+/* SIDEBAR */
+.sidebar{position:sticky;top:88px;}
+.sb-search{position:relative;margin-bottom:28px;}
+.sb-search input{width:100%;padding:14px 48px 14px 18px;border:1.5px solid rgba(45,106,79,.15);border-radius:14px;font-size:14px;font-family:'Instrument Sans',sans-serif;background:var(--white);color:var(--text);outline:none;transition:border-color .2s;cursor:none;}
+.sb-search input:focus{border-color:var(--mid);}
+.sb-search input::placeholder{color:var(--text-muted);}
+.sb-search i{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:15px;pointer-events:none;}
+
+.filter-group{margin-bottom:28px;}
+.fg-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted);margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+.filter-chips{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{padding:7px 14px;border-radius:100px;font-size:12px;font-weight:600;border:1.5px solid rgba(45,106,79,.15);background:transparent;color:var(--text-mid);cursor:none;transition:all .2s;}
+.chip:hover{border-color:var(--mid);color:var(--mid);}
+.chip.active{background:var(--mid);border-color:var(--mid);color:#fff;}
+.chip-sev-h{border-color:#fdecea;color:#b71c1c;}
+.chip-sev-h.active{background:#b71c1c;border-color:#b71c1c;color:#fff;}
+.chip-sev-m{border-color:#fff8e1;color:#e65100;}
+.chip-sev-m.active{background:#e65100;border-color:#e65100;color:#fff;}
+.chip-sev-l{border-color:var(--pale);color:#1b5e20;}
+.chip-sev-l.active{background:#1b5e20;border-color:#1b5e20;color:#fff;}
+
+.sidebar-cta{background:var(--forest);border-radius:16px;padding:24px;margin-top:8px;text-align:center;}
+.sidebar-cta h4{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--white);margin-bottom:8px;}
+.sidebar-cta p{font-size:13px;color:rgba(255,255,255,.5);margin-bottom:18px;line-height:1.5;}
+.sidebar-cta a{display:block;background:var(--bright);color:var(--forest);padding:12px;border-radius:10px;font-size:13px;font-weight:700;text-decoration:none;transition:background .2s;}
+.sidebar-cta a:hover{background:var(--lime);}
+
+/* CONTENT AREA */
+.lib-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:12px;}
+.lib-count{font-size:15px;color:var(--text-muted);}
+.lib-count strong{color:var(--forest);}
+.sort-select{padding:9px 16px;border:1.5px solid rgba(45,106,79,.15);border-radius:10px;font-size:13px;font-family:'Instrument Sans',sans-serif;color:var(--text-mid);background:var(--white);outline:none;cursor:none;transition:border-color .2s;}
+.sort-select:focus{border-color:var(--mid);}
+.view-toggle{display:flex;gap:4px;background:var(--parchment);border-radius:10px;padding:4px;}
+.vt-btn{width:34px;height:34px;border-radius:7px;border:none;background:transparent;color:var(--text-muted);cursor:none;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .2s;}
+.vt-btn.active{background:var(--white);color:var(--mid);box-shadow:0 1px 4px rgba(0,0,0,.08);}
+
+/* DISEASE CARDS */
+.diseases-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+.diseases-grid.list-view{grid-template-columns:1fr;}
+.dcard{background:var(--white);border-radius:18px;overflow:hidden;border:1px solid rgba(45,106,79,.08);transition:transform .3s cubic-bezier(.22,.68,0,1.2),box-shadow .3s,border-color .2s;cursor:none;animation:cardFadeIn .4s ease both;}
+@keyframes cardFadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.dcard:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(13,40,24,.1);border-color:rgba(45,106,79,.2);}
+.dcard.hidden{display:none;}
+.dcard-img{height:140px;display:flex;align-items:center;justify-content:center;font-size:52px;position:relative;}
+.dcard-crop-tag{position:absolute;top:12px;left:12px;background:rgba(0,0,0,.4);backdrop-filter:blur(8px);color:#fff;font-size:10px;font-weight:700;padding:4px 10px;border-radius:100px;text-transform:uppercase;letter-spacing:.05em;}
+.dcard-fav{position:absolute;top:12px;right:12px;width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,.3);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.7);font-size:12px;cursor:none;transition:all .2s;}
+.dcard-fav:hover{background:var(--amber);color:#fff;}
+.dcard-fav.faved{background:var(--amber);color:#fff;}
+.dcard-body{padding:18px 20px;}
+.dcard-body h3{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--forest);margin-bottom:5px;line-height:1.25;}
+.dcard-sci{font-size:11px;color:var(--text-muted);font-style:italic;margin-bottom:10px;}
+.dcard-desc{font-size:12px;color:var(--text-muted);line-height:1.55;margin-bottom:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.dcard-footer{display:flex;align-items:center;justify-content:space-between;}
+.sev-pill{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;padding:4px 10px;border-radius:100px;letter-spacing:.04em;text-transform:uppercase;}
+.sp-h{background:#fdecea;color:#b71c1c;}
+.sp-m{background:#fff8e1;color:#e65100;}
+.sp-l{background:var(--pale);color:#1b5e20;}
+.dcard-btn{font-size:11px;font-weight:700;color:var(--mid);text-decoration:none;display:flex;align-items:center;gap:4px;transition:gap .15s;}
+.dcard-btn:hover{gap:7px;}
+
+/* LIST VIEW card */
+.list-view .dcard{display:grid;grid-template-columns:140px 1fr;}
+.list-view .dcard-img{height:100%;border-radius:0;font-size:40px;}
+.list-view .dcard-desc{-webkit-line-clamp:3;}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(13,40,24,.7);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{background:var(--white);border-radius:28px;max-width:760px;width:100%;max-height:90vh;overflow-y:auto;position:relative;transform:scale(.95) translateY(20px);transition:transform .35s cubic-bezier(.22,.68,0,1.2);}
+.modal-overlay.open .modal{transform:scale(1) translateY(0);}
+.modal-header{position:relative;height:220px;display:flex;align-items:center;justify-content:center;font-size:80px;}
+.modal-close{position:fixed;top:24px;right:24px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.15);backdrop-filter:blur(8px);border:none;color:#fff;font-size:16px;cursor:none;display:flex;align-items:center;justify-content:center;transition:background .2s;z-index:10;}
+.modal-close:hover{background:rgba(255,255,255,.3);}
+.modal-body{padding:32px;}
+.modal-title{font-family:'Fraunces',serif;font-size:28px;font-weight:900;color:var(--forest);margin-bottom:4px;}
+.modal-sci{font-size:14px;color:var(--text-muted);font-style:italic;margin-bottom:16px;}
+.modal-badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;}
+.mbadge{font-size:11px;font-weight:700;padding:5px 12px;border-radius:100px;letter-spacing:.04em;text-transform:uppercase;}
+.mb-danger{background:#fdecea;color:#b71c1c;}
+.mb-warning{background:#fff8e1;color:#e65100;}
+.mb-ok{background:var(--pale);color:#1b5e20;}
+.mb-blue{background:#e8f4fd;color:#1a6fa8;}
+.mb-purple{background:#f0e8ff;color:#6b3fd4;}
+.modal-tabs{display:flex;gap:4px;background:var(--parchment);border-radius:12px;padding:4px;margin-bottom:24px;}
+.mtab{flex:1;padding:10px;border-radius:9px;font-size:13px;font-weight:600;color:var(--text-muted);border:none;background:transparent;cursor:none;transition:all .2s;text-align:center;}
+.mtab.active{background:var(--mid);color:#fff;}
+.mtab-content{display:none;}
+.mtab-content.active{display:block;}
+.modal-section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--mid);margin-bottom:12px;margin-top:20px;}
+.modal-section-title:first-child{margin-top:0;}
+.modal-text{font-size:14px;color:var(--text-mid);line-height:1.7;}
+.modal-steps{list-style:none;display:flex;flex-direction:column;gap:10px;}
+.modal-step{display:flex;gap:12px;font-size:14px;color:var(--text-mid);line-height:1.5;}
+.ms-dot{width:7px;height:7px;border-radius:50%;background:var(--bright);flex-shrink:0;margin-top:7px;}
+.treat-pair{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:0;}
+.tp-card{background:var(--cream);border-radius:14px;padding:18px;}
+.tp-card h5{font-size:13px;font-weight:700;color:var(--forest);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.tp-card p{font-size:13px;color:var(--text-muted);line-height:1.55;}
+.diag-btn{display:inline-flex;align-items:center;gap:8px;margin-top:24px;background:var(--mid);color:#fff;padding:14px 28px;border-radius:100px;font-size:14px;font-weight:700;text-decoration:none;border:none;cursor:none;transition:all .2s;}
+.diag-btn:hover{background:var(--forest);transform:translateY(-2px);}
+
+/* PAGINATION */
+.pagination{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:52px;}
+.pg-btn{width:40px;height:40px;border-radius:10px;border:1.5px solid rgba(45,106,79,.15);background:transparent;color:var(--text-mid);font-size:14px;font-weight:600;cursor:none;transition:all .2s;display:flex;align-items:center;justify-content:center;}
+.pg-btn:hover{border-color:var(--mid);color:var(--mid);}
+.pg-btn.active{background:var(--mid);border-color:var(--mid);color:#fff;}
+.pg-btn.disabled{opacity:.35;pointer-events:none;}
+
+/* TOAST */
+.toast{position:fixed;bottom:32px;right:32px;z-index:9000;background:var(--forest);color:var(--white);padding:14px 22px;border-radius:14px;font-size:14px;font-weight:500;border:1px solid rgba(82,183,136,.3);box-shadow:0 8px 32px rgba(0,0,0,.3);display:flex;align-items:center;gap:10px;transform:translateY(100px);opacity:0;transition:all .4s cubic-bezier(.22,.68,0,1.2);}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast i{color:var(--bright);}
+
+/* EMPTY STATE */
+.empty-state{grid-column:1/-1;text-align:center;padding:80px 20px;}
+.empty-state i{font-size:48px;color:var(--lime);margin-bottom:20px;}
+.empty-state h3{font-family:'Fraunces',serif;font-size:24px;color:var(--forest);margin-bottom:8px;}
+.empty-state p{color:var(--text-muted);}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s cubic-bezier(.22,.68,0,1.2),transform .7s cubic-bezier(.22,.68,0,1.2);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:900px){
+  .lib-layout{grid-template-columns:1fr;}
+  .sidebar{position:static;}
+  .diseases-grid{grid-template-columns:repeat(2,1fr);}
+  .list-view .dcard{grid-template-columns:1fr;}
+  .list-view .dcard-img{height:120px;}
+  .treat-pair{grid-template-columns:1fr;}
+  body{cursor:auto;}
+  #cursor,#cursor-ring{display:none;}
+}
+@media(max-width:580px){
+  .diseases-grid{grid-template-columns:1fr;}
+  .lib-stats{flex-wrap:wrap;}
+  .lstat{flex:1 1 45%;}
+  .lstat:first-child,.lstat:last-child{border-radius:0;}
+}
+</style>
+</head>
+<body>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+<div class="toast" id="toast"><i class="fas fa-check-circle"></i><span id="toastMsg">Done!</span></div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModalDirect()"><i class="fas fa-times"></i></button>
+    <div class="modal-header" id="modalHeader">🌾</div>
+    <div class="modal-body">
+      <div class="modal-title" id="modalTitle">Disease Name</div>
+      <div class="modal-sci" id="modalSci">Scientific name</div>
+      <div class="modal-badges" id="modalBadges"></div>
+      <div class="modal-tabs">
+        <button class="mtab active" onclick="switchMTab(this,'overview')"><i class="fas fa-info-circle" style="margin-right:5px"></i>Overview</button>
+        <button class="mtab" onclick="switchMTab(this,'treatment')"><i class="fas fa-pills" style="margin-right:5px"></i>Treatment</button>
+        <button class="mtab" onclick="switchMTab(this,'prevention')"><i class="fas fa-shield-alt" style="margin-right:5px"></i>Prevention</button>
+      </div>
+      <div class="mtab-content active" id="mtab-overview">
+        <div class="modal-section-title">Description</div>
+        <div class="modal-text" id="modalDesc"></div>
+        <div class="modal-section-title" style="margin-top:20px">Symptoms</div>
+        <ul class="modal-steps" id="modalSymptoms"></ul>
+        <div class="modal-section-title" style="margin-top:20px">Favourable conditions</div>
+        <div class="modal-text" id="modalConditions"></div>
+      </div>
+      <div class="mtab-content" id="mtab-treatment">
+        <div class="treat-pair">
+          <div class="tp-card"><h5><i class="fas fa-flask" style="color:#3498db"></i>Chemical</h5><p id="modalChem"></p></div>
+          <div class="tp-card"><h5><i class="fas fa-leaf" style="color:var(--bright)"></i>Organic</h5><p id="modalOrg"></p></div>
+        </div>
+        <div class="modal-section-title" style="margin-top:20px">Application steps</div>
+        <ul class="modal-steps" id="modalTreatSteps"></ul>
+      </div>
+      <div class="mtab-content" id="mtab-prevention">
+        <ul class="modal-steps" id="modalPrevSteps"></ul>
+      </div>
+      <a href="cropsense_v2.html#diagnose" class="diag-btn"><i class="fas fa-microscope"></i>Diagnose this disease with AI</a>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="cropsense_v2.html">
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+      <rect width="40" height="40" rx="12" fill="#2d6a4f"/>
+      <path d="M20 6C13.4 6 8 11.4 8 18c0 4.6 2.5 8.6 6.3 10.8V34h11.4v-5.2C29.5 26.6 32 22.6 32 18c0-6.6-5.4-12-12-12z" fill="#b7e4c7" opacity="0.4"/>
+      <path d="M20 6C13.4 6 8 11.4 8 18c0 4.6 2.5 8.6 6.3 10.8V34h11.4v-5.2C29.5 26.6 32 22.6 32 18c0-6.6-5.4-12-12-12z" fill="none" stroke="#52b788" stroke-width="1.5"/>
+      <path d="M17 30v-6h-3l6-11 6 11h-3v6h-6z" fill="white"/>
+      <circle cx="20" cy="17" r="3" fill="#52b788"/>
+    </svg>
+    <span class="nav-logo-text">Crop<span>Sense</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="cropsense_v2.html#features">Features</a></li>
+    <li><a href="#" class="active">Disease Library</a></li>
+    <li><a href="cropsense_v2.html#diagnose">AI Diagnosis</a></li>
+    <li><a href="cropsense_v2.html#pricing">Pricing</a></li>
+    <li><a href="cropsense_v2.html#" class="nav-cta"><i class="fas fa-mobile-alt"></i> Get App</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="lib-hero">
+  <div class="lib-hero-inner">
+    <div class="hero-tag"><i class="fas fa-book-medical"></i>Disease Library</div>
+    <h1>Every crop disease.<br><em>One place.</em></h1>
+    <p>Browse our comprehensive database of 500+ crop diseases — complete with symptoms, treatments, prevention strategies, and AI-powered diagnosis.</p>
+    <div class="lib-stats reveal">
+      <div class="lstat"><div class="lstat-num" id="statDiseases">0</div><div class="lstat-label">Diseases</div></div>
+      <div class="lstat"><div class="lstat-num">28</div><div class="lstat-label">Crop types</div></div>
+      <div class="lstat"><div class="lstat-num">6</div><div class="lstat-label">Categories</div></div>
+      <div class="lstat"><div class="lstat-num">14</div><div class="lstat-label">Languages</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="lib-main">
+  <div class="lib-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sb-search">
+        <input type="text" id="searchInput" placeholder="Search diseases, crops…" oninput="applyFilters()">
+        <i class="fas fa-search"></i>
+      </div>
+
+      <div class="filter-group">
+        <div class="fg-label"><i class="fas fa-seedling"></i>Crop</div>
+        <div class="filter-chips" id="cropFilters">
+          <button class="chip active" onclick="toggleFilter(this,'crop','all')">All</button>
+          <button class="chip" onclick="toggleFilter(this,'crop','wheat')">Wheat</button>
+          <button class="chip" onclick="toggleFilter(this,'crop','rice')">Rice</button>
+          <button class="chip" onclick="toggleFilter(this,'crop','tomato')">Tomato</button>
+          <button class="chip" onclick="toggleFilter(this,'crop','maize')">Maize</button>
+          <button class="chip" onclick="toggleFilter(this,'crop','potato')">Potato</button>
+          <button class="chip" onclick="toggleFilter(this,'crop','cotton')">Cotton</button>
+          <button class="chip" onclick="toggleFilter(this,'crop','sugarcane')">Sugarcane</button>
+          <button class="chip" onclick="toggleFilter(this,'crop','soybean')">Soybean</button>
+          <button class="chip" onclick="toggleFilter(this,'crop','groundnut')">Groundnut</button>
+          <button class="chip" onclick="toggleFilter(this,'crop','chilli')">Chilli</button>
+          <button class="chip" onclick="toggleFilter(this,'crop','banana')">Banana</button>
+          <button class="chip" onclick="toggleFilter(this,'crop','mango')">Mango</button>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <div class="fg-label"><i class="fas fa-dna"></i>Disease type</div>
+        <div class="filter-chips" id="typeFilters">
+          <button class="chip active" onclick="toggleFilter(this,'type','all')">All</button>
+          <button class="chip" onclick="toggleFilter(this,'type','fungal')">🍄 Fungal</button>
+          <button class="chip" onclick="toggleFilter(this,'type','bacterial')">🦠 Bacterial</button>
+          <button class="chip" onclick="toggleFilter(this,'type','viral')">⚡ Viral</button>
+          <button class="chip" onclick="toggleFilter(this,'type','pest')">🐛 Pest</button>
+          <button class="chip" onclick="toggleFilter(this,'type','nutrient')">🌱 Nutrient</button>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <div class="fg-label"><i class="fas fa-thermometer-half"></i>Severity</div>
+        <div class="filter-chips" id="sevFilters">
+          <button class="chip active" onclick="toggleFilter(this,'sev','all')">All</button>
+          <button class="chip chip-sev-h" onclick="toggleFilter(this,'sev','high')"><i class="fas fa-exclamation-triangle" style="font-size:9px"></i>High</button>
+          <button class="chip chip-sev-m" onclick="toggleFilter(this,'sev','medium')"><i class="fas fa-minus" style="font-size:9px"></i>Medium</button>
+          <button class="chip chip-sev-l" onclick="toggleFilter(this,'sev','low')"><i class="fas fa-check" style="font-size:9px"></i>Low</button>
+        </div>
+      </div>
+
+      <div class="sidebar-cta">
+        <h4>Can't find it?</h4>
+        <p>Use our AI to diagnose any unknown disease from a photo in 3 seconds.</p>
+        <a href="cropsense_v2.html#diagnose"><i class="fas fa-microscope" style="margin-right:6px"></i>Run AI Diagnosis</a>
+      </div>
+    </aside>
+
+    <!-- GRID -->
+    <div>
+      <div class="lib-topbar reveal">
+        <div class="lib-count">Showing <strong id="visibleCount">0</strong> diseases</div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <select class="sort-select" id="sortSelect" onchange="applyFilters()">
+            <option value="name">Sort: A–Z</option>
+            <option value="severity">Sort: Severity</option>
+            <option value="crop">Sort: Crop</option>
+          </select>
+          <div class="view-toggle">
+            <button class="vt-btn active" id="gridViewBtn" onclick="setView('grid')" title="Grid view"><i class="fas fa-th-large"></i></button>
+            <button class="vt-btn" id="listViewBtn" onclick="setView('list')" title="List view"><i class="fas fa-list"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="diseases-grid" id="diseasesGrid"></div>
+      <div class="pagination" id="pagination"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── CURSOR ── */
+const cur=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.transform=`translate(${mx-6}px,${my-6}px)`;});
+(function animRing(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.transform=`translate(${rx-20}px,${ry-20}px)`;requestAnimationFrame(animRing);})();
+
+/* ── NAV ── */
+window.addEventListener('scroll',()=>{document.querySelector('nav').style.background=window.scrollY>60?'rgba(248,244,236,.97)':'rgba(248,244,236,.92)';});
+
+/* ── REVEAL ── */
+const revObs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');}),{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
+
+/* ── TOAST ── */
+function showToast(msg){const t=document.getElementById('toast');document.getElementById('toastMsg').textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
+
+/* ════════════════════════════════════
+   DISEASE DATABASE — 48 diseases
+════════════════════════════════════ */
+const DB=[
+  // WHEAT
+  {id:1,name:'Wheat Yellow Rust',sci:'Puccinia striiformis f. sp. tritici',crop:'wheat',type:'fungal',sev:'high',emoji:'🌾',bg:'#fffbf0',
+   desc:'One of the most damaging wheat diseases worldwide. Yellow-orange stripe patterns form along leaf veins, dramatically reducing photosynthesis and grain filling. Spreads via wind-borne urediniospores across vast distances.',
+   symptoms:['Yellow-orange stripe patterns parallel to leaf veins','Powdery spore masses on leaf surfaces','Leaves turn brown and dry in advanced stages','Reduced grain size and weight','Premature leaf death in severe infections'],
+   conditions:'Cool temperatures (10–15°C) and high humidity or dew. Most destructive in North India from November–March.',
+   chem:'Propiconazole 25% EC at 0.1% (500–750 ml/ha). Alternatively Tebuconazole 25.9% EC at 0.1%. Repeat after 15 days if needed.',
+   org:'Neem oil (5ml/L) + garlic extract spray. Sulfur dust (20 kg/ha) preventively. Trichoderma-based bioagent soil drench.',
+   treatSteps:['Remove heavily infected leaves to reduce spore load','Apply fungicide in early morning before 9am','Ensure uniform coverage including leaf undersides','Repeat spray after 15 days if wet weather continues','Monitor for 7 days post-spray'],
+   prevSteps:['Plant resistant varieties: HD-3086, PBW-343, K-307','Maintain proper row spacing for air circulation','Avoid excess nitrogen fertiliser','Apply prophylactic fungicide at tillering stage in high-risk zones','Scout fields weekly Nov–Feb']},
+
+  {id:2,name:'Wheat Brown Rust',sci:'Puccinia triticina',crop:'wheat',type:'fungal',sev:'high',emoji:'🌾',bg:'#fff3e8',
+   desc:'Brown rust causes circular to oval orange-brown pustules scattered on leaf surfaces. More common than yellow rust in warmer regions. Can cause 20–40% yield loss in susceptible varieties.',
+   symptoms:['Circular orange-brown pustules on upper leaf surface','Random distribution unlike stripe pattern of yellow rust','Dark brown spores visible in late season','Early leaf senescence','Reduced tillering in severe cases'],
+   conditions:'Warm temperatures (15–22°C), high humidity. Common in central and peninsular India.',
+   chem:'Mancozeb 75% WP at 0.25% or Propiconazole 25% EC at 0.1%. Apply at first pustule appearance.',
+   org:'Copper-based fungicide (Bordeaux mixture 0.5%). Neem oil spray at booting stage.',
+   treatSteps:['Scout fields from tillering stage','Spray at flag leaf stage for best results','Maintain spray pressure for uniform coverage','Repeat after 21 days if new pustules appear'],
+   prevSteps:['Use resistant varieties for your region','Timely sowing to avoid peak disease period','Balanced NPK — avoid excess nitrogen','Remove volunteer wheat plants']},
+
+  {id:3,name:'Wheat Loose Smut',sci:'Ustilago tritici',crop:'wheat',type:'fungal',sev:'medium',emoji:'🌾',bg:'#f5f0ff',
+   desc:'Infected heads are completely replaced by masses of dark brown to black smut spores. The entire grain is converted into teliospores, leaving a bare rachis after spore dispersal. Seed-borne disease.',
+   symptoms:['Entire wheat head replaced by dark smut spore mass','Black powdery spores disperse during flowering','Bare straw-coloured rachis remains after spore release','No visible symptoms until heading','Affected plants emerge slightly earlier than healthy plants'],
+   conditions:'Seed infection occurs during flowering when spores contaminate exposed ovaries. Favoured by moderate temperatures and humidity.',
+   chem:'Seed treatment with Carboxin 37.5% + Thiram 37.5% DS at 3g/kg seed before sowing.',
+   org:'Hot water seed treatment: soak seed at 52°C for 10 minutes. Dry and sow immediately. Bioagent Trichoderma seed treatment.',
+   treatSteps:['Treatment must be applied as seed treatment before sowing','Do not use smutted grain as seed','Treat all seed lots in affected areas'],
+   prevSteps:['Always use certified, treated seed','Never save seed from affected fields','Eradicate infected plants before spore release','Clean all farm equipment to prevent spread']},
+
+  // RICE
+  {id:4,name:'Rice Blast',sci:'Magnaporthe oryzae',crop:'rice',type:'fungal',sev:'high',emoji:'🌿',bg:'#f0fff4',
+   desc:'The most destructive disease of rice globally. Can attack leaves, nodes, collar and panicle. Diamond-shaped lesions with grey centres and brown borders appear on leaves. Node blast causes lodging; neck blast destroys panicles.',
+   symptoms:['Diamond/spindle-shaped lesions with grey centres','Brown to reddish-brown borders around lesions','Multiple lesions coalesce causing blighting','Node blast — black rotting of stem nodes','Panicle base rotting causing empty grains'],
+   conditions:'High humidity (>90%), temperatures 24–28°C, low light intensity. Excessive nitrogen application increases susceptibility.',
+   chem:'Tricyclazole 75% WP at 0.06% or Isoprothiolane 40% EC at 0.075%. Apply at tillering and panicle initiation.',
+   org:'Pseudomonas fluorescens (10g/L) spray. Silicon-rich fertiliser application strengthens cell walls. Botanical: neem cake soil application.',
+   treatSteps:['Apply first spray at early tillering stage','Spray again at panicle initiation','Drain standing water during periods of high humidity','Avoid late evening irrigation','Monitor daily during humid, overcast weather'],
+   prevSteps:['Use resistant varieties: IR-64, Pusa Basmati 1','Balanced NPK — split nitrogen application','Maintain adequate spacing between plants','Avoid continuous flooding — intermittent irrigation','Remove crop debris after harvest']},
+
+  {id:5,name:'Rice Bacterial Blight',sci:'Xanthomonas oryzae pv. oryzae',crop:'rice',type:'bacterial',sev:'high',emoji:'🌿',bg:'#e8f5e9',
+   desc:'Causes water-soaked to yellowish stripes on leaf margins and tips which turn white to yellow then grey and necrotic. In severe kresek phase, entire plants wilt and die. One of most serious rice bacterial diseases.',
+   symptoms:['Water-soaked to yellowish stripes on leaf margins','Lesions extend from tip towards base','Yellowing then whitening and drying of affected leaves','Kresek phase: wilting of entire seedlings','Milky bacterial ooze visible in morning dew'],
+   conditions:'Temperatures 25–30°C, high humidity, flooding, wounds from insects or mechanical damage. Spread by wind-driven rain and irrigation water.',
+   chem:'Copper oxychloride 50% WP at 0.25% + Streptocycline 100ppm spray. Apply immediately on disease appearance.',
+   org:'Pseudomonas fluorescens seed treatment (10g/kg). Avoid injured transplanting. Remove and destroy infected plants.',
+   treatSteps:['Drain infected fields immediately','Avoid overhead irrigation','Spray copper-based bactericide at 5-day intervals','Remove severely infected plants from field','Disinfect tools and equipment'],
+   prevSteps:['Use disease-free certified seed','Plant resistant varieties','Avoid injuries during transplanting','Balance fertilisation — avoid excess nitrogen','Control leafhoppers and other insect vectors']},
+
+  {id:6,name:'Rice Sheath Blight',sci:'Rhizoctonia solani',crop:'rice',type:'fungal',sev:'high',emoji:'🌿',bg:'#fff8e1',
+   desc:'Irregular greenish-grey water-soaked lesions appear on leaf sheaths near waterline. Lesions enlarge with white to grey centres and dark brown borders. Sclerotia visible on infected tissue. Can cause 50%+ yield loss.',
+   symptoms:['Oval to irregular lesions on leaf sheath near waterline','Greenish-grey water-soaked spots turning white-grey','Dark brown lesion borders','Sclerotia (brown seed-like bodies) on infected tissue','Premature lodging in severe cases'],
+   conditions:'Warm temperatures (28–32°C), high humidity, dense crop stands, high nitrogen fertilisation, continuous flooding.',
+   chem:'Validamycin 3% L at 0.2% or Propiconazole 25% EC at 0.1%. Spray at sheath level targeting waterline.',
+   org:'Trichoderma harzianum soil application at 2.5 kg/ha. Pseudomonas fluorescens 2.5 kg/ha soil drench. Reduce plant density.',
+   treatSteps:['Target spray at the waterline/sheath level','Drain field before spraying for better penetration','Use 500L water/ha for thorough coverage','Repeat spray 15 days after first spray','Reduce nitrogen application in infected fields'],
+   prevSteps:['Reduce plant density — avoid close spacing','Avoid excessive nitrogen, especially late doses','Drain fields periodically to reduce humidity','Remove and destroy infected stubble','Use tolerant varieties where available']},
+
+  // TOMATO
+  {id:7,name:'Tomato Late Blight',sci:'Phytophthora infestans',crop:'tomato',type:'fungal',sev:'high',emoji:'🍅',bg:'#fff0f0',
+   desc:'The infamous pathogen behind the Irish Potato Famine. Causes rapidly spreading dark water-soaked lesions on leaves, stems and fruits. Under humid conditions, white fuzzy sporulation visible on undersides of lesions. Can destroy a field within days.',
+   symptoms:['Dark green to brown water-soaked spots on leaves','White fuzzy sporulation on leaf undersides in humid conditions','Dark brown firm lesions on fruits','Infected stems show dark brown lesions causing collapse','Characteristic musty odour in infected fields'],
+   conditions:'Cool temperatures (10–20°C), high humidity (>90%), prolonged leaf wetness. Spreads explosively during monsoon and cool season.',
+   chem:'Mancozeb 75% WP at 0.25% or Metalaxyl+Mancozeb (Ridomil Gold) at 0.2%. Spray every 7 days during wet weather.',
+   org:'Copper hydroxide (Kocide) at 0.25%. Compost tea (10% v/v) as immune booster. Bordeaux mixture 1% as preventive spray.',
+   treatSteps:['Begin protective sprays before disease appears','Spray on calendar basis during cool, humid weather','Ensure undersides of leaves are thoroughly covered','Remove and bag infected plant material immediately','Avoid overhead irrigation — use drip'],
+   prevSteps:['Plant resistant varieties: Arka Raksha, Pusa Hybrid-2','Use disease-free certified transplants','Avoid overhead irrigation','Stake plants for good air circulation','Apply mulch to prevent soil splash onto leaves']},
+
+  {id:8,name:'Tomato Early Blight',sci:'Alternaria solani',crop:'tomato',type:'fungal',sev:'medium',emoji:'🍅',bg:'#fdf5f0',
+   desc:'Target-spot lesions with concentric rings appear on older, lower leaves first and progress upward. Unlike late blight, develops in warm, dry conditions. More of a stress-related disease, worsened by nutrient deficiency.',
+   symptoms:['Dark brown concentric ring "target-spot" lesions on lower leaves','Yellow halo around lesions','Lesions progress from bottom of plant upward','Premature defoliation in severe cases','Irregular dark lesions on fruit near stem'],
+   conditions:'Warm temperatures (24–29°C), alternating wet/dry periods. Plant stress from drought, nutrient deficiency, or heavy fruit load increases susceptibility.',
+   chem:'Chlorothalonil 75% WP at 0.2% or Mancozeb 75% WP at 0.25%. Apply every 10–14 days.',
+   org:'Compost extract spray (1:10 dilution). Baking soda solution (1 tbsp/L). Copper sulfate 0.5% spray.',
+   treatSteps:['Remove lower infected leaves before spraying','Apply fungicide starting from transplanting','Maintain spray schedule even when symptoms are mild','Ensure adequate irrigation during fruiting','Apply balanced fertiliser to reduce stress'],
+   prevSteps:['Maintain balanced NPK — especially calcium and potassium','Avoid water stress — consistent irrigation','Remove lower leaves touching soil','Rotate crops every 2–3 years','Avoid working in wet fields to reduce spread']},
+
+  {id:9,name:'Tomato Leaf Curl Virus',sci:'Tomato Leaf Curl New Delhi Virus (ToLCNDV)',crop:'tomato',type:'viral',sev:'high',emoji:'🍅',bg:'#fdf0ff',
+   desc:'India\'s most economically devastating tomato disease. Transmitted by whitefly (Bemisia tabaci). Causes severe upward or downward curling of leaves, stunting, and yellow mottling. No cure — prevention through vector control is essential.',
+   symptoms:['Upward or downward curling and cupping of leaves','Yellowing and interveinal chlorosis','Severe plant stunting','Reduced fruit size and production','Proliferation of auxiliary shoots giving bushy appearance'],
+   conditions:'Hot, dry conditions favour whitefly vectors. Drought stress increases susceptibility. Widespread in tropical and subtropical regions.',
+   chem:'No cure for virus. Control whitefly vector with Imidacloprid 17.8% SL at 0.5 ml/L or Thiamethoxam 25% WG at 0.3g/L.',
+   org:'Neem oil spray (5ml/L) to repel whiteflies. Yellow sticky traps at 15/ha. Reflective mulch to deter whiteflies.',
+   treatSteps:['Remove and destroy infected plants immediately','Spray insecticide to control whitefly vectors','Apply neem oil spray every 7 days preventively','Install yellow sticky traps','Monitor plant health weekly'],
+   prevSteps:['Use virus-tolerant/resistant hybrids: Arka Samrat, Pusa Rohini','Use whitefly-free certified transplants','Apply systemic insecticide at transplanting','Install insect-proof nets in nurseries','Avoid planting near cucurbit crops']},
+
+  // MAIZE
+  {id:10,name:'Maize Northern Leaf Blight',sci:'Exserohilum turcicum',crop:'maize',type:'fungal',sev:'medium',emoji:'🌽',bg:'#f5f0ff',
+   desc:'Long, cigar-shaped grey-green lesions on maize leaves. Lesions can extend 5–15 cm in length. Severe infection before silking can cause 30–50% yield loss. Pathogen overwinters in crop residue.',
+   symptoms:['Long elliptical cigar-shaped lesions (5–15 cm)','Tan-grey to olive-green lesion colour','Dark sooty sporulation visible on lesions','Lesions spread rapidly under humid conditions','Premature leaf death reducing grain fill'],
+   conditions:'Temperatures 18–27°C, heavy dew, prolonged leaf wetness, overcast skies. Common during rainy season.',
+   chem:'Propiconazole 25% EC or Tebuconazole 25.9% EC at 0.1%. Spray at tasseling stage for best results.',
+   org:'Neem-based fungicide spray. Trichoderma soil application. Balanced potassium nutrition improves resistance.',
+   treatSteps:['Identify first lesion appearance on lower leaves','Apply fungicide at tasseling if infection >5% plant area','Spray in evening to avoid heat stress','Ensure coverage of upper leaves at tasseling','Second spray 14 days later if wet weather persists'],
+   prevSteps:['Plant resistant hybrids for your region','Plough under crop residue after harvest','Crop rotation — avoid continuous maize','Balanced fertilisation — adequate potassium','Avoid dense planting, maintain recommended spacing']},
+
+  {id:11,name:'Maize Fall Armyworm',sci:'Spodoptera frugiperda',crop:'maize',type:'pest',sev:'high',emoji:'🌽',bg:'#fff8e1',
+   desc:'Invasive pest from Americas, now devastating African and Asian maize crops. Larvae consume leaf tissue leaving characteristic "window pane" feeding damage, then bore into whorls and developing ears. Young larvae feed in groups; older ones are solitary.',
+   symptoms:['Window-pane feeding damage on young leaves','Irregular holes in whorl leaves with sawdust-like frass','Caterpillars visible inside whorls (brown with inverted Y on head)','Ear feeding with wet frass and silk damage','Severe defoliation in young plants'],
+   conditions:'Warm humid conditions. Adult moths migrate across long distances. Outbreaks common during kharif season in India.',
+   chem:'Emamectin Benzoate 5% SG at 0.4g/L or Chlorantraniliprole 18.5% SC at 0.4ml/L. Target the whorl for best contact.',
+   org:'Bacillus thuringiensis (Bt) spray 2g/L into whorl. Neem oil 5ml/L. Egg parasitoid Telenomus remus release. Pheromone traps at 5/ha.',
+   treatSteps:['Scout fields twice weekly from V2 stage','Target spray into leaf whorls — not surface spray','Best spray time: early morning or evening','Apply Bt spray when larvae are young (1st–2nd instar)','Set pheromone traps at field periphery'],
+   prevSteps:['Early planting to avoid peak moth population','Intercrop with cowpea to encourage natural enemies','Install bird perches for natural predation','Scout neighbouring fields for early detection','Use Bt maize varieties where available']},
+
+  // POTATO
+  {id:12,name:'Potato Late Blight',sci:'Phytophthora infestans',crop:'potato',type:'fungal',sev:'high',emoji:'🥔',bg:'#f0f8ff',
+   desc:'Same pathogen as tomato late blight. In potato, causes rapid browning of foliage and dark, firm, brownish-grey tuber rot extending inward from skin. Wet rots develop under humid storage conditions. Entire fields can collapse within a week.',
+   symptoms:['Water-soaked, irregularly shaped brown lesions on leaves','White sporulation on leaf undersides in humid conditions','Dark brown lesions on stems','Tubers show reddish-brown, granular flesh rot','Dark smelly tuber rot in storage'],
+   conditions:'Cool (10–20°C), moist conditions, prolonged leaf wetness. Classic "blight weather" — overcast, drizzly, humid.',
+   chem:'Metalaxyl+Mancozeb (Ridomil Gold MZ) 0.2% or Cymoxanil+Mancozeb 0.3%. Spray every 5–7 days in high-risk weather.',
+   org:'Copper hydroxide spray 0.3% as protective treatment. Garlic extract spray to delay disease. Destroy infected tubers before storage.',
+   treatSteps:['Begin protective sprays before haulm closure','Spray every 5–7 days during cool, wet spells','Stop irrigation when disease appears','Desiccate haulms 2 weeks before harvest','Harvest in dry conditions — avoid field spread to tubers'],
+   prevSteps:['Plant certified blight-free seed tubers','Use resistant varieties: Kufri Jyoti, Kufri Sindhuri','Haulm destruction 2 weeks before harvest','Avoid irrigation during cool, wet weather','Store tubers in cool, well-ventilated conditions']},
+
+  {id:13,name:'Potato Early Blight',sci:'Alternaria solani',crop:'potato',type:'fungal',sev:'medium',emoji:'🥔',bg:'#fff8f0',
+   desc:'One of the most common potato foliar diseases. Target-spot lesions with concentric rings begin on lower/older leaves and spread upward. The disease is favoured by warm temperatures and is often associated with plant stress.',
+   symptoms:['Dark brown circular to angular lesions with concentric rings','Yellow halo around lesions on green tissue','Lesions begin on lower, older leaves','Progressive defoliation from bottom upward','Stem lesions (stem blight) in severe cases'],
+   conditions:'Warm (24–30°C), alternating wet and dry periods. Nutrient-deficient and drought-stressed plants highly susceptible.',
+   chem:'Mancozeb 75% WP at 0.25% or Chlorothalonil 75% WP at 0.2%. Begin spraying at first symptom.',
+   org:'Compost extract spray. Balanced calcium and potassium fertilisation. Neem oil 5ml/L spray.',
+   treatSteps:['Inspect lower leaves weekly from canopy closure','Apply fungicide on calendar schedule during warm weather','Ensure adequate soil moisture to reduce plant stress','Remove heavily infected lower leaves','Apply calcium foliar spray to boost resistance'],
+   prevSteps:['Adequate fertilisation — especially nitrogen and potassium','Consistent irrigation to avoid drought stress','Remove volunteer potato plants from fields','Crop rotation every 2–3 years','Plant certified, disease-free seed tubers']},
+
+  // COTTON
+  {id:14,name:'Cotton Leaf Curl Disease',sci:'Cotton Leaf Curl Multan Virus (CLCuMV)',crop:'cotton',type:'viral',sev:'high',emoji:'🌱',bg:'#f0fff4',
+   desc:'The most devastating cotton disease in South Asia. Transmitted by whitefly (Bemisia tabaci). Causes severe leaf curling, vein darkening, enation (leaf-like structures on undersides) and stunting. No chemical cure.',
+   symptoms:['Upward or downward curling of leaves','Thickening and darkening of leaf veins','Enations (leaf-like outgrowths) on lower leaf surface','Severe plant stunting','Reduced fruiting and boll setting'],
+   conditions:'Hot, dry conditions favour whitefly populations. Peak incidence July–October in Pakistan/India cotton belt.',
+   chem:'Control whitefly vector: Imidacloprid 17.8% SL at 0.5ml/L, alternated with Spiromesifen 22.9% SC at 1ml/L to delay resistance.',
+   org:'Neem oil spray (5ml/L) weekly. Yellow sticky traps at 15–20/ha. Remove and destroy infected plants early.',
+   treatSteps:['Remove infected plants immediately upon detection','Spray systemic insecticide to control whitefly','Alternate insecticides to prevent resistance buildup','Install yellow sticky traps at canopy height','Scout fields twice weekly'],
+   prevSteps:['Plant tolerant/resistant varieties where available','Avoid ratoon cotton which harbours virus over season','Early sowing before peak whitefly season','Control weeds that serve as virus reservoirs','Use reflective mulch in nurseries']},
+
+  {id:15,name:'Cotton Bollworm',sci:'Helicoverpa armigera',crop:'cotton',type:'pest',sev:'high',emoji:'🌱',bg:'#fdf5e4',
+   desc:'The "American bollworm" or "gram pod borer" is a major polyphagous pest attacking cotton bolls. Larvae bore into green bolls and devour the seeds, causing boll rot. Highly adaptable with resistance to many insecticides.',
+   symptoms:['Entry holes on green bolls with frass','Bolls failing to open — dark internal rot','Caterpillars visible inside bolls (variable coloration)','Square and flower damage in early season','Severe boll drop under heavy infestation'],
+   conditions:'Warm temperatures, flowering and boll development stage. Peak incidence August–October. Day length and host availability drive migrations.',
+   chem:'Emamectin Benzoate 5% SG at 0.4g/L or Spinosad 45% SC at 0.3ml/L. Rotate modes of action to prevent resistance.',
+   org:'Bt (Bacillus thuringiensis var. kurstaki) spray 2g/L. Nuclear Polyhedrosis Virus (HaNPV) 500 LE/ha. Pheromone traps 5/ha for monitoring.',
+   treatSteps:['Use pheromone traps for early detection','Spray at ETL (1 larva/plant)','Target spray on buds, squares and bolls','Best spray time: 6–9am when larvae are active','Alternate between insecticide groups each spray'],
+   prevSteps:['Plant early maturing varieties to escape peak pest','Grow intercrop of maize as trap crop','Install bird perches every 25m','Conserve natural enemies: Trichogramma, Chrysoperla','Plough fields after harvest to destroy pupae in soil']},
+
+  // SUGARCANE
+  {id:16,name:'Sugarcane Red Rot',sci:'Colletotrichum falcatum',crop:'sugarcane',type:'fungal',sev:'high',emoji:'🌿',bg:'#fff0f0',
+   desc:'One of the most serious diseases of sugarcane. Internal stalk tissue turns red with white patches. Leaves yellow and wilt. The fungus enters through wounds or by boring insect tunnels. Severely infected canes have foul odour.',
+   symptoms:['Internal reddening of stalk with alternating white patches','Yellowing and withering of middle leaves','Drying of leaves from top downward','Foul fermented odour from split stalks','Red liquid oozes when stalk is cut'],
+   conditions:'Temperatures 26–32°C, high humidity, water-logged conditions, presence of boring insects. Spread through infected setts.',
+   chem:'Fungicide sett treatment: Carbendazim 50% WP at 0.1% for 30 minutes before planting. Tridemorph spray on standing crop.',
+   org:'Treat setts in hot water (52°C for 30 min). Trichoderma-treated sett dip before planting.',
+   treatSteps:['Remove and burn all infected stalks immediately','Treat healthy setts before planting in affected fields','Drain waterlogged areas promptly','Control borers that create entry wounds','Do not use setts from infected fields'],
+   prevSteps:['Use certified, disease-free setts from healthy crop','Plant resistant varieties for your region','Avoid waterlogging — ensure field drainage','Control stalk borers to reduce entry wounds','Ratoon management — avoid ratoons from infected fields']},
+
+  // SOYBEAN
+  {id:17,name:'Soybean Rust',sci:'Phakopsora pachyrhizi',crop:'soybean',type:'fungal',sev:'high',emoji:'🫘',bg:'#fffbf0',
+   desc:'Asian soybean rust is one of the most rapidly spreading diseases of soybean. Small, water-soaked lesions develop tan-brown pustules on leaf undersides. Severe defoliation reduces yield by 10–80% depending on infection timing.',
+   symptoms:['Small angular water-soaked spots on upper leaf surface','Tan-brown pustules (uredinia) on leaf undersides','Premature yellowing and defoliation','Pod fill significantly reduced','Rapid disease spread — entire canopy can be affected in 1–2 weeks'],
+   conditions:'Temperatures 15–28°C, >75% relative humidity, leaf wetness >6 hours. Wind-borne spread over long distances.',
+   chem:'Trifloxystrobin+Tebuconazole (Nativo) at 0.5ml/L or Pyraclostrobin+Epoxiconazole at label rate. Apply at R1–R3 growth stage.',
+   org:'Neem oil spray at early growth stage. Silicon soil amendment to improve plant resistance. Trichoderma asperellum spray.',
+   treatSteps:['Scout weekly from flowering stage','Apply fungicide at first pustule appearance','Second spray 14–21 days after first','Ensure thorough coverage of lower leaf surfaces','Harvest at physiological maturity to avoid further loss'],
+   prevSteps:['Plant early-maturing varieties to avoid peak risk period','Optimum plant spacing for air circulation','Monitor inoculum from neighbouring fields','Avoid irrigation that extends leaf wetness period','Destroy infected crop debris promptly']},
+
+  // GROUNDNUT
+  {id:18,name:'Tikka Disease (Cercospora Leaf Spot)',sci:'Cercospora arachidicola & C. personata',crop:'groundnut',type:'fungal',sev:'high',emoji:'🥜',bg:'#fdf5e0',
+   desc:'The most widespread and serious foliage disease of groundnut. Two species cause early leaf spot (Cercospora arachidicola) and late leaf spot (C. personata). Both cause severe defoliation reducing pod yield and seed quality significantly.',
+   symptoms:['Early leaf spot: circular brown spots with yellow halos','Late leaf spot: darker, more circular spots, often on lower surface','Severe defoliation starting from lower leaves','Infected pegs and pods show lesions','Significant reduction in photosynthesis and pod fill'],
+   conditions:'High humidity, temperatures 25–30°C, continuous groundnut cultivation. Early leaf spot appears from 4 weeks, late leaf spot from 6 weeks after planting.',
+   chem:'Mancozeb 75% WP at 0.25% or Chlorothalonil 75% WP at 0.2%. Begin at 30 days after sowing, repeat every 10–14 days.',
+   org:'Neem oil spray 5ml/L. Copper oxychloride 0.3% spray. Organic neem cake soil application at planting.',
+   treatSteps:['First spray at 30–35 days after sowing','Continue on 10–14 day schedule throughout season','Spray in early morning before temperatures rise','Ensure lower leaf surface coverage','Stop spray 2 weeks before harvest'],
+   prevSteps:['Crop rotation with non-host crops','Adequate spacing for air circulation','Remove and plough in crop debris after harvest','Avoid overhead irrigation','Plant resistant varieties: ICGV 86031, JL-24']},
+
+  // CHILLI
+  {id:19,name:'Chilli Anthracnose',sci:'Colletotrichum capsici',crop:'chilli',type:'fungal',sev:'high',emoji:'🌶️',bg:'#fff0e8',
+   desc:'Post-harvest anthracnose is the most serious disease of chilli fruit. Causes circular, sunken, water-soaked lesions that turn dark brown with pink-orange spore masses in concentric rings. Causes 40–50% post-harvest losses.',
+   symptoms:['Circular, water-soaked sunken lesions on ripe fruit','Dark brown to black lesion centres','Pink-orange spore masses in concentric rings','Lesions may cover entire fruit in wet conditions','Pre-harvest fruit drop in severe cases'],
+   conditions:'Warm humid conditions, temperatures 25–30°C. Disease appears on ripe and over-ripe fruits. Infection occurs in field but symptoms appear post-harvest.',
+   chem:'Carbendazim 50% WP at 0.1% pre-harvest spray. Post-harvest fruit dip in Carbendazim 500ppm for 5 minutes.',
+   org:'Trichoderma viride spray on plants. Bacillus subtilis spray on developing fruits. Neem oil 5ml/L pre-harvest.',
+   treatSteps:['Begin pre-harvest sprays at fruit-set stage','Spray at 10–14 day intervals','Harvest at correct stage — avoid over-ripe fruit harvest','Cool fruits rapidly after harvest','Post-harvest dip in fungicide or hot water (52°C, 2 min)'],
+   prevSteps:['Use certified disease-free seed and transplants','Avoid irrigation water splashing onto fruits','Harvest at correct stage before over-ripening','Store fruits in cool, dry conditions','Avoid physical damage during harvest and transport']},
+
+  // BANANA
+  {id:20,name:'Panama Wilt (Fusarium Wilt)',sci:'Fusarium oxysporum f. sp. cubense',crop:'banana',type:'fungal',sev:'high',emoji:'🍌',bg:'#fffbf0',
+   desc:'Panama disease has destroyed entire banana industries historically and threatens the Cavendish banana today (TR4 race). Causes yellowing, wilting and internal brown discolouration of vascular tissue. No effective chemical cure.',
+   symptoms:['Yellowing of outer leaves first, progressing inward','Lower leaf margins yellow-brown before wilting','Leaves collapse at petiole (pseudostem splitting)','Internal pseudostem tissue shows yellow to brown vascular discolouration','Complete plant death in severe cases'],
+   conditions:'Soil temperatures 24–32°C, acid soils, presence of the specific race in soil. Disease persists in soil for decades.',
+   chem:'No effective systemic fungicide. Soil fumigation with Methyl Bromide (restricted) or Dazomet in severely infested areas.',
+   org:'Biocontrol with Trichoderma harzianum + Pseudomonas fluorescens soil application. Maintain soil health with organic matter. Hot water treatment of suckers.',
+   treatSteps:['Remove and destroy infected plants including corms','Do not replant banana in infected areas','Disinfect tools between plants','Treat planting material with bioagents','Report TR4 to agricultural authorities'],
+   prevSteps:['Use certified disease-free tissue-culture planting material','Plant resistant varieties: FHIA-01, FHIA-17, Grandnain (TR4 resistant)','Do not introduce soil or suckers from infected areas','Maintain high soil organic matter','Practise strict biosecurity on farms']},
+
+  {id:21,name:'Banana Sigatoka Leaf Spot',sci:'Mycosphaerella fijiensis / M. musicola',crop:'banana',type:'fungal',sev:'medium',emoji:'🍌',bg:'#f0fff8',
+   desc:'Yellow sigatoka (M. musicola) and Black sigatoka (M. fijiensis) cause premature leaf death reducing bunch weight and quality. Black sigatoka is the more severe strain and is resistant to many fungicides.',
+   symptoms:['Small yellowish streaks on young leaves (early)','Streaks enlarge into elongated brown spots','Grey-brown necrotic centres with yellow halos (mature lesions)','Severe premature leaf drying — brown "torching"','Reduced bunch weight and early fruit ripening'],
+   conditions:'High humidity, temperatures 24–28°C, frequent rainfall. Disease cycle is 20–30 days; rapid epidemic development in humid tropics.',
+   chem:'Propiconazole 25% EC or Tridemorph 80% EC applied by knapsack or aerial spray. Rotate fungicides to manage resistance.',
+   org:'Neem oil spray 5ml/L. Copper oxychloride preventive spray. Remove and destroy heavily infected leaves.',
+   treatSteps:['Monitor leaf index (ratio of healthy to affected leaves)','Remove leaves below the bunch','Apply fungicide spray when leaf index falls below threshold','Ensure complete leaf coverage','Rotate between fungicide groups'],
+   prevSteps:['Plant resistant varieties: Grand Nain, Williams','Adequate spacing for air circulation','Proper drainage to reduce humidity','Remove old infected leaves regularly','Avoid overhead irrigation']},
+
+  // MANGO
+  {id:22,name:'Mango Anthracnose',sci:'Colletotrichum gloeosporioides',crop:'mango',type:'fungal',sev:'high',emoji:'🥭',bg:'#fff3e0',
+   desc:'The most important post-harvest disease of mango. Causes blossom blight, leaf spot, and most critically, post-harvest fruit rot. Infection occurs in field but symptoms develop during ripening and storage.',
+   symptoms:['Black sunken lesions on ripe fruit','Blossom blight — flowers turn black and die','Brown to black spots on young leaves','Shoot dieback','Fruit rot spreading from stem end during ripening'],
+   conditions:'High humidity and warm temperatures during flowering (26–32°C). Latent infections develop during fruit ripening and storage.',
+   chem:'Carbendazim 50% WP at 0.1% or Copper oxychloride 50% WP at 0.25%. Spray during flowering and fruit development.',
+   org:'Trichoderma harzianum spray at flowering. Hot water treatment: dip fruit at 55°C for 5 minutes immediately after harvest.',
+   treatSteps:['Pre-harvest: spray at 50% flowering, repeat at fruit set','Post-harvest hot water treatment (55°C, 5 min)','Cool fruits rapidly after treatment','Store in cool, ventilated conditions','Do not mix infected and healthy fruit'],
+   prevSteps:['Prune trees for good air circulation','Remove mummified fruits and infected twigs','Spray during panicle emergence','Avoid overhead irrigation','Handle fruits carefully to avoid wounds']},
+
+  {id:23,name:'Mango Powdery Mildew',sci:'Erysiphe cichoracearum',crop:'mango',type:'fungal',sev:'medium',emoji:'🥭',bg:'#f5f0ff',
+   desc:'White powdery growth on young leaves, panicles and young fruits during cooler months (Nov–March). Can cause significant panicle and fruit drop if infection is severe at the critical flowering stage.',
+   symptoms:['White powdery coating on young leaves and panicles','Infected panicles turn brown and die','Young fruits develop white coating then drop','Severe incidence during cool season (Nov–March)','Distorted, yellowing young leaves'],
+   conditions:'Cool, dry conditions (15–20°C), high humidity at night but low during day. Cloud cover and moderate temperatures. Season: November to March.',
+   chem:'Wettable sulfur 80% WP at 0.2% or Triadimefon 25% WP at 0.05%. Spray at panicle emergence and repeat at 15-day intervals.',
+   org:'Neem oil 5ml/L spray at panicle emergence. Baking soda solution (1 tbsp/L). Potassium bicarbonate spray 5g/L.',
+   treatSteps:['Begin spray at first sign of panicle emergence','Critical to spray before powdery growth appears on flowers','Do not spray during rain','Spray in evening for better adherence','Repeat at 15-day intervals through fruit set'],
+   prevSteps:['Prune crowded branches before flowering season','Avoid over-application of nitrogen which promotes tender growth','Time fertilisation to avoid excess tender growth in November','Monitor for first symptoms in October','Spray preventively in years with cool, humid November weather']},
+
+  // NUTRIENT DEFICIENCIES
+  {id:24,name:'Iron Deficiency (Lime-Induced Chlorosis)',sci:'Abiotic — Fe deficiency',crop:'wheat',type:'nutrient',sev:'medium',emoji:'🌱',bg:'#fff8e1',
+   desc:'Interveinal chlorosis on young leaves caused by iron deficiency. Most common in calcareous (high pH) soils of Punjab, Haryana and UP where iron availability is restricted despite adequate soil iron content.',
+   symptoms:['Interveinal chlorosis — yellowing between green veins on young leaves','Most severe on youngest leaves (unlike magnesium deficiency on older leaves)','New growth pale yellow to white','Dark green veins contrast sharply against pale leaf tissue','Severe stunting in very deficient cases'],
+   conditions:'Alkaline/calcareous soils (pH >7.5), waterlogged soils, high bicarbonate in irrigation water, low soil organic matter.',
+   chem:'Ferrous Sulfate (FeSO₄) foliar spray at 1% (10g/L) with 0.5% citric acid to acidify solution. Repeat 3 times at weekly intervals.',
+   org:'Iron chelate (Fe-EDTA) foliar spray 0.5g/L. Soil application of FeSO₄ at 25 kg/ha. Add organic matter (compost, FYM) to improve Fe availability.',
+   treatSteps:['Apply foliar spray in early morning when stomates are open','Add small amount of wetting agent for better adhesion','Spray 2–3 times at weekly intervals','Avoid alkaline water for spray preparation','Monitor plant colour 7 days after spray'],
+   prevSteps:['Add organic matter annually to improve soil microbiome and Fe availability','Avoid over-irrigation which raises soil pH','Check irrigation water pH and bicarbonate levels','Soil application of FeSO₄ at transplanting','Grow green manure crops to maintain soil organic carbon']},
+
+  {id:25,name:'Zinc Deficiency (Khaira Disease)',sci:'Abiotic — Zn deficiency',crop:'rice',type:'nutrient',sev:'medium',emoji:'🌿',bg:'#e8fff4',
+   desc:'"Khaira disease" of rice is caused by zinc deficiency, one of the most widespread micronutrient deficiencies in Indian rice soils. Young leaves show bronzing and necrotic spots. Stunted tillering severely reduces yield.',
+   symptoms:['Rusty-brown spots on lower leaves 2–4 weeks after transplanting','Midrib of lower leaves turns pale yellow-white','Plants show "recovery" as season progresses in mild deficiency','Severe stunting with limited tillering','Bronzing and necrosis of leaf tips'],
+   conditions:'Alkaline/saline soils (pH >7.0), flooded soils with high organic matter, high-pH irrigation water, sandy soils with low organic matter.',
+   chem:'Zinc Sulfate (ZnSO₄·7H₂O) soil application at 25 kg/ha (broadcast + incorporate) before transplanting. Foliar spray of ZnSO₄ 0.5% at tillering.',
+   org:'Zinc-enriched compost. Zinc-solubilising bacteria (Bacillus sp.) seed treatment. Maintain soil organic matter above 1%.',
+   treatSteps:['Apply ZnSO₄ as basal dose before transplanting','In standing crop, drain and apply ZnSO₄ and re-flood after 3 days','Foliar spray 0.5% ZnSO₄ + 0.25% slaked lime at tillering','Repeat foliar spray after 10 days if symptoms persist'],
+   prevSteps:['Apply ZnSO₄ 25 kg/ha every 2–3 years on deficient soils','Maintain adequate soil organic matter','Avoid prolonged flooding in Zn-deficient soils','Soil testing for micronutrients every 3 years','Use Zn-coated fertilisers where available']},
+
+  // MORE DISEASES
+  {id:26,name:'Powdery Mildew (Wheat)',sci:'Blumeria graminis f. sp. tritici',crop:'wheat',type:'fungal',sev:'medium',emoji:'🌾',bg:'#f5f0ff',
+   desc:'White powdery colonies on leaves and stems of wheat. Causes yellowing and premature drying of affected tissues. More common in well-irrigated, high-nitrogen environments.',
+   symptoms:['White to grey powdery fungal colonies on leaf surface','Yellowish-green discolouration below colonies','Oval to elongated colonies on stems and flag leaf','Black cleistothecia (fruiting bodies) visible in late season','Premature leaf death'],
+   conditions:'Cool temperatures (15–22°C), high humidity, dense crop stands, high nitrogen. Common in irrigated wheat.',
+   chem:'Propiconazole 25% EC at 0.1% or Triadimefon 25% WP at 0.05%. Spray at first sign of infection.',
+   org:'Wettable sulfur 80% WP at 0.2%. Baking soda spray 5g/L. Neem oil spray.',
+   treatSteps:['Apply spray at first white powdery colonies','Target spray on flag leaf and upper canopy','Second spray 14–21 days later if wet weather continues'],
+   prevSteps:['Plant resistant varieties','Avoid excessive nitrogen application','Maintain optimum plant spacing','Avoid late evening irrigation']},
+
+  {id:27,name:'Fusarium Crown Rot',sci:'Fusarium culmorum / F. pseudograminearum',crop:'wheat',type:'fungal',sev:'medium',emoji:'🌾',bg:'#fdf0e8',
+   desc:'Causes browning of sub-crown internode and crown area. Infected plants show premature dying (whiteheads) during grain fill. Distinguished from other root rots by salmon-pink colouration at infected crown region.',
+   symptoms:['Brown to salmon-pink colouration of crown region','Premature dying of tillers ("whiteheads") at grain fill','Brown internal crown tissue visible on cross-section','Poor root development','Reduced tillering and grain fill'],
+   conditions:'Dry, warm soils. Common in low-rainfall or rain-fed wheat areas. Severity increases under moisture stress during grain fill.',
+   chem:'Seed treatment with Carboxin+Thiram (3g/kg) before sowing to reduce seedling infection.',
+   org:'Trichoderma-based seed treatment. Increase organic matter to improve soil microbial competition.',
+   treatSteps:['Seed treatment is the key management tool','No in-crop chemical options effective after infection','Manage moisture stress to reduce symptom severity'],
+   prevSteps:['Crop rotation — avoid 2+ years of continuous wheat','Incorporate crop residue to promote decomposition','Manage water stress especially during grain fill','Plant resistant varieties where available']},
+
+  {id:28,name:'Tomato Bacterial Wilt',sci:'Ralstonia solanacearum',crop:'tomato',type:'bacterial',sev:'high',emoji:'🍅',bg:'#fdecea',
+   desc:'Soil-borne bacterial pathogen causing rapid wilting of entire plants. Plants wilt first in the heat of the day and recover at night, then permanently collapse. Bacterial streaming visible when infected stem is placed in water.',
+   symptoms:['Rapid wilting of entire plant, especially in hot afternoon','Initial recovery at night — then permanent collapse','Lower leaves yellow before wilting','Bacterial streaming from cut stem in water (milky ooze)','Brown vascular tissue visible in stem cross-section'],
+   conditions:'Warm to hot soils (>24°C), high soil moisture, slightly acidic soils. Spread through infected soil, water and contaminated tools.',
+   chem:'No effective chemical control. Copper bactericides applied as preventive soil drench may slow spread. Bleach (1:9 dilution) for tool disinfection.',
+   org:'Beneficial microbes (Bacillus subtilis, Pseudomonas fluorescens) soil drench at planting. Grafting onto resistant rootstocks (e.g., Maxifort).',
+   treatSteps:['Remove and destroy infected plants and surrounding soil immediately','Do not compost infected plants','Solarise affected beds for 4–6 weeks before replanting','Disinfect all tools between plants','Avoid moving soil from infected areas'],
+   prevSteps:['Use resistant rootstocks (grafted plants)','Raise soil pH to 7.0 with lime — reduces pathogen activity','Crop rotation with non-solanaceous crops for 3+ years','Raised beds with drip irrigation to reduce soil moisture','Biosecurity — clean boots and tools between plots']},
+
+  {id:29,name:'Downy Mildew (Maize)',sci:'Peronosclerospora sorghi',crop:'maize',type:'fungal',sev:'high',emoji:'🌽',bg:'#f0f8ff',
+   desc:'Sorghum downy mildew causes severe seedling infection and systemic disease in maize. Infected plants are stunted with pale green to yellow stripes and white downy sporulation on lower leaf surfaces. Complete crop failure can occur.',
+   symptoms:['Pale green to yellow chlorotic stripes on leaves','White downy sporulation on lower leaf surface','Severe plant stunting in young plants','Abnormal proliferation of leaf-like structures on male tassels','Complete plant death in young seedlings'],
+   conditions:'High humidity, temperatures 22–30°C, wet soils at planting. More severe in low-lying fields with poor drainage.',
+   chem:'Seed treatment with Metalaxyl 35% WS at 6g/kg seed. Spray Metalaxyl+Mancozeb at 0.2% at first symptom appearance.',
+   org:'Trichoderma-treated seed. Soil solarisation before planting. Remove and destroy infected plants early.',
+   treatSteps:['Seed treatment is the primary protection','Remove infected plants immediately upon detection','Apply protective spray after rain events','Drain waterlogged fields promptly'],
+   prevSteps:['Seed treatment with metalaxyl mandatory in endemic areas','Improve field drainage before planting','Crop rotation with non-grass crops','Remove and destroy volunteer maize plants','Plant resistant hybrids for your region']},
+
+  {id:30,name:'Chilli Damping Off',sci:'Pythium aphanidermatum / Rhizoctonia solani',crop:'chilli',type:'fungal',sev:'medium',emoji:'🌶️',bg:'#fff8f0',
+   desc:'Major nursery disease of chilli causing pre and post-emergence damping off. Seeds rot before emergence or seedlings collapse at soil level with characteristic pinching/water-soaking at collar region.',
+   symptoms:['Seeds fail to germinate (pre-emergence damping off)','Water-soaked lesion at soil level of seedlings','Seedlings collapse suddenly at collar region','Circular patches of dead seedlings in nursery bed','Collapsed seedlings show pinched, brown stem at soil line'],
+   conditions:'High soil moisture, warm temperatures, dense seedling stands, poor nursery drainage, unsterilised soil.',
+   chem:'Drench nursery with Copper oxychloride 0.3% or Metalaxyl+Mancozeb 0.2% at first sign. Seed treatment with Thiram 2g/kg.',
+   org:'Trichoderma harzianum + Pseudomonas fluorescens soil treatment (2.5 kg each/ha of soil). Soil solarisation of nursery bed for 3–4 weeks.',
+   treatSteps:['Drench nursery immediately at first collapsed seedling','Improve drainage by raising nursery beds','Reduce irrigation frequency','Remove and destroy collapsed seedlings','Apply Trichoderma drench preventively at germination'],
+   prevSteps:['Solarise nursery beds before sowing (4–6 weeks)','Prepare raised beds for good drainage','Use sterilised/pasteurised potting mix','Avoid overwatering nursery beds','Treat seed with bioagents before sowing']},
+
+  // Extra diseases to reach 36 total
+  {id:31,name:'Cercospora Leaf Spot (Soybean)',sci:'Cercospora sojina',crop:'soybean',type:'fungal',sev:'medium',emoji:'🫘',bg:'#f0fff4',
+   desc:'Causes angular, brown to reddish-brown spots with a reddish-purple margin on soybean leaves. Can cause premature defoliation and seed staining. More common in warm, humid weather during pod fill.',
+   symptoms:['Angular brown spots with reddish-purple borders','Lesions limited by leaf veins giving angular appearance','Premature yellowing and defoliation','Reddish-brown seed coat discolouration','Pod lesions in severe infections'],
+   conditions:'Warm, humid conditions during pod development. Temperatures 25–30°C, high humidity, prolonged leaf wetness.',
+   chem:'Carbendazim 50% WP at 0.1% or Mancozeb 75% WP at 0.25%. Spray at R3 growth stage.',
+   org:'Neem oil spray at pod set. Copper oxychloride 0.3% spray preventively.',
+   treatSteps:['Scout from R2 (full bloom) stage','Spray at first sign or at R3 as preventive','Ensure good coverage of upper and lower leaves'],
+   prevSteps:['Crop rotation with non-legume crops','Incorporate crop residue after harvest','Plant resistant varieties where available','Avoid late sowing in humid areas']},
+
+  {id:32,name:'Bacterial Leaf Blight (Soybean)',sci:'Pseudomonas savastanoi pv. glycinea',crop:'soybean',type:'bacterial',sev:'low',emoji:'🫘',bg:'#e8fff4',
+   desc:'Water-soaked lesions that turn brown and angular on soybean leaves. More common after hail or wind damage. Generally causes minor yield loss but can reduce seed quality.',
+   symptoms:['Water-soaked, angular spots between veins','Yellow halos around brown lesions','Multiple small spots coalescing in severe cases','Lower leaf surface shows darker lesions','Premature leaf drop in severe cases'],
+   conditions:'Cool, wet conditions (16–24°C), physical damage from hail, wind or rain splash. Common after storm events.',
+   chem:'Copper-based bactericide spray at 0.25%. Streptocycline 100ppm spray in severe cases.',
+   org:'No highly effective organic option. Avoid field work when plants are wet.',
+   treatSteps:['Apply copper bactericide after hail or storm events','Avoid spray in windy conditions','Do not enter fields when leaves are wet'],
+   prevSteps:['Plant windbreaks on exposed field boundaries','Use disease-free certified seed','Avoid field scouting when plants are wet after rain','Plant resistant varieties where available']},
+
+  {id:33,name:'Alternaria Leaf Blight (Groundnut)',sci:'Alternaria alternata',crop:'groundnut',type:'fungal',sev:'medium',emoji:'🥜',bg:'#fff8e0',
+   desc:'Causes irregular, necrotic spots with yellowish halos on groundnut leaves. More of an opportunistic pathogen attacking stressed plants. Can cause significant defoliation if combined with other stresses.',
+   symptoms:['Irregular brown necrotic lesions with yellow halos','Dark brown to black lesion centres with concentric rings','Lesions coalesce into large blighted areas','Premature defoliation in severe cases','Dark sporulation visible on lesions under humid conditions'],
+   conditions:'Warm temperatures, drought stress, late season infection. More common as crop matures.',
+   chem:'Mancozeb 75% WP at 0.25% or Chlorothalonil 75% WP at 0.2%. Spray as part of tikka disease programme.',
+   org:'Neem oil 5ml/L spray. Balanced fertilisation to reduce stress.',
+   treatSteps:['Manage as part of overall leaf spot programme','Apply fungicide sprays on same schedule as tikka disease control','Reduce plant stress through irrigation and fertilisation'],
+   prevSteps:['Crop rotation','Adequate irrigation','Balanced nutrition','Remove crop debris after harvest']},
+
+  {id:34,name:'Cotton Root Rot',sci:'Rotylenchulus reniformis (Reniform nematode)',crop:'cotton',type:'pest',sev:'medium',emoji:'🌱',bg:'#f0ffe8',
+   desc:'Reniform nematode is a serious pest of cotton in South India and coastal cotton belts. Females attach to root surface causing root swelling, poor root function and yellowing of the plant.',
+   symptoms:['Yellowing and wilting during heat of day','Roots show small galls or "beading" on root surface','Poor root development and branching','Stunted plant growth','Reduced boll set and fibre quality'],
+   conditions:'Sandy loam soils, warm soil temperatures, continuous cotton cultivation increases nematode population.',
+   chem:'Carbofuran 3G at 33 kg/ha in furrow at planting or Phorate 10G at 10 kg/ha.',
+   org:'Neem cake at 200 kg/ha incorporated in soil before planting. Pseudomonas fluorescens + Paecilomyces lilacinus (bioagents) seed treatment.',
+   treatSteps:['Apply nematicide at planting — not effective after establishment','Soil application must be incorporated before planting','Bioagent application with seed and as soil drench'],
+   prevSteps:['Crop rotation with non-host crops (groundnut, sorghum)','Soil solarisation before planting','Incorporate neem cake or mustard cake at planting','Avoid moving soil from infected fields']},
+
+  {id:35,name:'Sugarcane Smut',sci:'Sporisorium scitamineum',crop:'sugarcane',type:'fungal',sev:'high',emoji:'🌿',bg:'#f5ffe8',
+   desc:'Infected plants produce a long, whip-like smut sorus from the growing point, replacing the top leaves with a curved black structure containing masses of teliospores. Severely infected ratoon fields can have >50% incidence.',
+   symptoms:['Long whip-like smut sorus emerging from growing point (10–100 cm)','Initially covered in silver membrane, breaking to release black spores','Plant stunting and tillering','Thin, grass-like leaves on affected stalks','High incidence in ratoon crop from previously infected fields'],
+   conditions:'Warm, dry conditions (25–35°C) with humidity fluctuations. Spread through infected setts and wind-borne teliospores.',
+   chem:'Hot water treatment of setts: 50°C for 2 hours or 54°C for 30 minutes. Mancozeb dip post-hot water treatment.',
+   org:'Hot water sett treatment. Remove and burn smutted shoots immediately. Bioagent Trichoderma sett dip.',
+   treatSteps:['Remove and burn all whip-bearing plants immediately','Do not allow whips to mature and release spores','Treat setts before planting in affected areas','Remove first ratoon in heavily infected fields'],
+   prevSteps:['Use certified disease-free planting material','Hot water treat all setts before planting','Remove smutted plants before they release spores','Destroy infected ratoon crops — do not take ratoon from infected plants','Plant resistant varieties for your region']},
+
+  {id:36,name:'Banana Bunchy Top Virus',sci:'Banana Bunchy Top Virus (BBTV)',crop:'banana',type:'viral',sev:'high',emoji:'🍌',bg:'#fffbe8',
+   desc:'The most serious viral disease of banana. Causes bunching of leaves at top of plant due to very shortened petioles. Dark green streaks on petioles and midribs. No cure — infected plants must be destroyed.',
+   symptoms:['Leaves become progressively smaller and erect — "bunchy top" appearance','Dark green streaks (Morse code pattern) on petioles and midribs','Leaf margins roll upward','Plants fail to produce bunches or produce small, malformed bunches','Young plants infected early never recover'],
+   conditions:'Transmitted by banana aphid (Pentalonia nigronervosa). Spreads through infected suckers. No spread without the aphid vector.',
+   chem:'Control aphid vector: Dimethoate 30% EC at 2ml/L or Imidacloprid 17.8% SL at 0.5ml/L.',
+   org:'Neem oil spray 5ml/L to repel aphids. Yellow sticky traps. Remove and destroy infected plants immediately.',
+   treatSteps:['Remove infected plants immediately — cut and inject with kerosene or herbicide through pseudostem','Control aphid vectors on surrounding plants','Inspect all new planting material for symptoms','Do not take suckers from infected plants'],
+   prevSteps:['Use certified virus-free tissue-culture planting material','Inspect fields monthly — remove infected plants immediately','Control aphid vector population regularly','Do not accept suckers from unknown sources','Quarantine new planting material for 2–4 weeks']},
+];
+
+/* ── FILTER STATE ── */
+let activeCrop='all', activeType='all', activeSev='all';
+let currentView='grid';
+const PAGE_SIZE=12;
+let currentPage=1;
+let filteredData=[...DB];
+let favorites=new Set(JSON.parse(localStorage.getItem('cs_favs')||'[]'));
+
+/* ── COUNTER ANIMATION ── */
+function animCount(el,target,suffix=''){let s=0;const dur=1200,step=ts=>{if(!s)s=ts;const p=Math.min((ts-s)/dur,1),e=1-Math.pow(1-p,3);el.textContent=Math.floor(e*target)+(p<1?'':suffix);if(p<1)requestAnimationFrame(step);};requestAnimationFrame(step);}
+const statObs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){statObs.disconnect();animCount(document.getElementById('statDiseases'),DB.length,'+');}}),{threshold:.5});
+statObs.observe(document.getElementById('statDiseases'));
+
+/* ── FILTERS ── */
+function toggleFilter(btn, group, value){
+  const groupEl=document.getElementById(group+'Filters')||document.getElementById(group+'Filters'.replace('sev','sev'));
+  const selector=group==='crop'?'#cropFilters .chip':group==='type'?'#typeFilters .chip':'#sevFilters .chip';
+  document.querySelectorAll(selector).forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+  if(group==='crop') activeCrop=value;
+  else if(group==='type') activeType=value;
+  else activeSev=value;
+  currentPage=1;
+  applyFilters();
+}
+
+function applyFilters(){
+  const q=document.getElementById('searchInput').value.toLowerCase();
+  const sort=document.getElementById('sortSelect').value;
+  filteredData=DB.filter(d=>{
+    const matchCrop=activeCrop==='all'||d.crop===activeCrop;
+    const matchType=activeType==='all'||d.type===activeType;
+    const matchSev=activeSev==='all'||d.sev===activeSev;
+    const matchSearch=!q||(d.name.toLowerCase().includes(q)||d.sci.toLowerCase().includes(q)||d.desc.toLowerCase().includes(q)||d.crop.toLowerCase().includes(q));
+    return matchCrop&&matchType&&matchSev&&matchSearch;
+  });
+  if(sort==='name') filteredData.sort((a,b)=>a.name.localeCompare(b.name));
+  else if(sort==='severity') filteredData.sort((a,b)=>({high:0,medium:1,low:2}[a.sev]-{high:0,medium:1,low:2}[b.sev]));
+  else if(sort==='crop') filteredData.sort((a,b)=>a.crop.localeCompare(b.crop));
+  renderGrid();
+}
+
+/* ── RENDER GRID ── */
+function renderGrid(){
+  const grid=document.getElementById('diseasesGrid');
+  document.getElementById('visibleCount').textContent=filteredData.length;
+  const totalPages=Math.ceil(filteredData.length/PAGE_SIZE);
+  currentPage=Math.min(currentPage,totalPages||1);
+  const pageData=filteredData.slice((currentPage-1)*PAGE_SIZE,currentPage*PAGE_SIZE);
+
+  if(filteredData.length===0){
+    grid.innerHTML=`<div class="empty-state"><i class="fas fa-search-minus"></i><h3>No diseases found</h3><p>Try different search terms or remove some filters.</p></div>`;
+    document.getElementById('pagination').innerHTML='';
+    return;
+  }
+
+  grid.innerHTML=pageData.map((d,i)=>{
+    const sevClass=d.sev==='high'?'sp-h':d.sev==='medium'?'sp-m':'sp-l';
+    const sevIcon=d.sev==='high'?'exclamation-triangle':d.sev==='medium'?'minus':'check';
+    const sevLabel=d.sev==='high'?'High severity':d.sev==='medium'?'Medium':'Low / Manageable';
+    const isFaved=favorites.has(d.id);
+    return `<div class="dcard" style="animation-delay:${i*.04}s" data-id="${d.id}">
+      <div class="dcard-img" style="background:${d.bg}">
+        ${d.emoji}
+        <span class="dcard-crop-tag">${d.crop}</span>
+        <div class="dcard-fav ${isFaved?'faved':''}" onclick="toggleFav(event,${d.id})" title="Save to favourites">
+          <i class="fas fa-heart"></i>
+        </div>
+      </div>
+      <div class="dcard-body">
+        <h3>${d.name}</h3>
+        <div class="dcard-sci">${d.sci}</div>
+        <div class="dcard-desc">${d.desc}</div>
+        <div class="dcard-footer">
+          <span class="sev-pill ${sevClass}"><i class="fas fa-${sevIcon}" style="font-size:8px"></i>${sevLabel}</span>
+          <a class="dcard-btn" href="javascript:void(0)" onclick="openModal(${d.id})">Details <i class="fas fa-arrow-right" style="font-size:10px"></i></a>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  renderPagination(totalPages);
+}
+
+/* ── PAGINATION ── */
+function renderPagination(total){
+  const pg=document.getElementById('pagination');
+  if(total<=1){pg.innerHTML='';return;}
+  let html=`<button class="pg-btn ${currentPage===1?'disabled':''}" onclick="goPage(${currentPage-1})"><i class="fas fa-chevron-left" style="font-size:12px"></i></button>`;
+  for(let i=1;i<=total;i++){
+    if(i===1||i===total||Math.abs(i-currentPage)<=1){html+=`<button class="pg-btn ${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;}
+    else if(Math.abs(i-currentPage)===2){html+=`<button class="pg-btn" style="pointer-events:none;opacity:.4">…</button>`;}
+  }
+  html+=`<button class="pg-btn ${currentPage===total?'disabled':''}" onclick="goPage(${currentPage+1})"><i class="fas fa-chevron-right" style="font-size:12px"></i></button>`;
+  pg.innerHTML=html;
+}
+function goPage(p){currentPage=p;renderGrid();window.scrollTo({top:document.querySelector('.lib-main').offsetTop-80,behavior:'smooth'});}
+
+/* ── VIEW TOGGLE ── */
+function setView(v){
+  currentView=v;
+  document.getElementById('diseasesGrid').className='diseases-grid'+(v==='list'?' list-view':'');
+  document.getElementById('gridViewBtn').classList.toggle('active',v==='grid');
+  document.getElementById('listViewBtn').classList.toggle('active',v==='list');
+}
+
+/* ── FAVOURITES ── */
+function toggleFav(e,id){
+  e.stopPropagation();
+  if(favorites.has(id)){favorites.delete(id);showToast('Removed from saved diseases');}
+  else{favorites.add(id);showToast('Saved to your library!');}
+  localStorage.setItem('cs_favs',JSON.stringify([...favorites]));
+  e.currentTarget.classList.toggle('faved',favorites.has(id));
+}
+
+/* ── MODAL ── */
+function openModal(id){
+  const d=DB.find(x=>x.id===id);
+  if(!d)return;
+  document.getElementById('modalHeader').textContent=d.emoji;
+  document.getElementById('modalHeader').style.background=d.bg;
+  document.getElementById('modalTitle').textContent=d.name;
+  document.getElementById('modalSci').textContent=d.sci;
+
+  const sevColor=d.sev==='high'?'mb-danger':d.sev==='medium'?'mb-warning':'mb-ok';
+  const typeColor=d.type==='fungal'?'mb-purple':d.type==='bacterial'?'mb-blue':d.type==='viral'?'mb-danger':d.type==='pest'?'mb-warning':'mb-ok';
+  document.getElementById('modalBadges').innerHTML=`
+    <span class="mbadge ${sevColor}">${d.sev==='high'?'⚠ High severity':d.sev==='medium'?'● Medium':'✓ Manageable'}</span>
+    <span class="mbadge mb-blue">${d.crop.charAt(0).toUpperCase()+d.crop.slice(1)}</span>
+    <span class="mbadge ${typeColor}">${d.type.charAt(0).toUpperCase()+d.type.slice(1)}</span>`;
+
+  document.getElementById('modalDesc').textContent=d.desc;
+  document.getElementById('modalSymptoms').innerHTML=d.symptoms.map(s=>`<li class="modal-step"><div class="ms-dot"></div>${s}</li>`).join('');
+  document.getElementById('modalConditions').textContent=d.conditions;
+  document.getElementById('modalChem').textContent=d.chem;
+  document.getElementById('modalOrg').textContent=d.org;
+  document.getElementById('modalTreatSteps').innerHTML=d.treatSteps.map(s=>`<li class="modal-step"><div class="ms-dot"></div>${s}</li>`).join('');
+  document.getElementById('modalPrevSteps').innerHTML=d.prevSteps.map(s=>`<li class="modal-step"><div class="ms-dot"></div>${s}</li>`).join('');
+
+  // Reset tabs
+  document.querySelectorAll('.mtab').forEach((t,i)=>t.classList.toggle('active',i===0));
+  document.querySelectorAll('.mtab-content').forEach((c,i)=>c.classList.toggle('active',i===0));
+
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(e){if(e.target===document.getElementById('modalOverlay'))closeModalDirect();}
+function closeModalDirect(){document.getElementById('modalOverlay').classList.remove('open');document.body.style.overflow='';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModalDirect();});
+
+function switchMTab(btn,id){
+  document.querySelectorAll('.mtab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.mtab-content').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('mtab-'+id).classList.add('active');
+}
+
+/* ── INIT ── */
+applyFilters();
+</script>
+</body>
+</html>
