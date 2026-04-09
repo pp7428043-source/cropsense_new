@@ -359,7 +359,7 @@ body:has(a:hover) #cursor-ring,body:has(button:hover) #cursor-ring{transform:tra
     <a class="sb-item" onclick="showPage('alerts',this)"><i class="fas fa-bell"></i><span data-i18n="sidebar.alerts">Alerts</span><span class="sb-badge">3</span></a>
 
     <div class="sb-section" data-i18n="sidebar.resources">Resources</div>
-    <a class="sb-item" href="library.html"><i class="fas fa-book-medical"></i><span data-i18n="sidebar.lib">Disease Library</span></a>
+    <a class="sb-item" href="/library.html"><i class="fas fa-book-medical"></i><span data-i18n="sidebar.lib">Disease Library</span></a>
     <a class="sb-item" onclick="showPage('saved',this)"><i class="fas fa-heart"></i><span data-i18n="sidebar.saved">Saved Diseases</span></a>
     <a class="sb-item" href="blog.html"><i class="fas fa-newspaper"></i><span data-i18n="sidebar.blog">Blog & Alerts</span></a>
 
@@ -1074,7 +1074,25 @@ async function processImageFile(file){
     const txt=data.content.map(b=>b.type==='text'?b.text:'').join('');
     const m=txt.replace(/```json|```/g,'').trim().match(/\{[\s\S]*\}/);
     showResult(JSON.parse(m?m[0]:txt));
-  }catch(e){hideDiagLoading();showToast(T('error'));}
+  }catch(e){
+    console.error("API Error:", e);
+    hideDiagLoading();
+    const el = document.getElementById('dashResult');
+    el.style.display = 'block';
+    el.innerHTML = `
+      <div class="card" style="padding:28px;margin-bottom:8px;border:1px solid var(--red)">
+        <div style="display:flex;align-items:center;gap:12px;color:var(--red);margin-bottom:16px">
+          <i class="fas fa-exclamation-triangle" style="font-size:24px"></i>
+          <span style="font-size:16px;font-weight:700">Diagnosis Connection Failed</span>
+        </div>
+        <div style="font-size:14px;color:var(--text-mid);margin-bottom:16px">
+          We couldn't connect to the AI diagnostic service right now. Please check your API configuration or connection.
+        </div>
+        <button style="padding:10px 20px;background:var(--red-pale);color:var(--red);border:none;border-radius:100px;font-size:13px;font-weight:700;cursor:none" onclick="resetDiag()">Try Again</button>
+      </div>
+    `;
+    showToast(T('error'));
+  }
 }
 
 const SAMPLE={
@@ -1091,7 +1109,25 @@ async function quickDiag(crop){
     const txt=data.content.map(b=>b.type==='text'?b.text:'').join('');
     const m=txt.replace(/```json|```/g,'').trim().match(/\{[\s\S]*\}/);
     showResult(JSON.parse(m?m[0]:txt));
-  }catch(e){hideDiagLoading();showToast(T('error'));}
+  }catch(e){
+    console.error("API Error:", e);
+    hideDiagLoading();
+    const el = document.getElementById('dashResult');
+    el.style.display = 'block';
+    el.innerHTML = `
+      <div class="card" style="padding:28px;margin-bottom:8px;border:1px solid var(--red)">
+        <div style="display:flex;align-items:center;gap:12px;color:var(--red);margin-bottom:16px">
+          <i class="fas fa-exclamation-triangle" style="font-size:24px"></i>
+          <span style="font-size:16px;font-weight:700">Diagnosis Connection Failed</span>
+        </div>
+        <div style="font-size:14px;color:var(--text-mid);margin-bottom:16px">
+          We couldn't connect to the AI diagnostic service right now. Please check your API configuration or connection.
+        </div>
+        <button style="padding:10px 20px;background:var(--red-pale);color:var(--red);border:none;border-radius:100px;font-size:13px;font-weight:700;cursor:none" onclick="resetDiag()">Try Again</button>
+      </div>
+    `;
+    showToast(T('error'));
+  }
 }
 
 function showDiagLoading(){

@@ -748,8 +748,11 @@ let favorites=new Set(JSON.parse(localStorage.getItem('cs_favs')||'[]'));
 
 /* ── COUNTER ANIMATION ── */
 function animCount(el,target,suffix=''){let s=0;const dur=1200,step=ts=>{if(!s)s=ts;const p=Math.min((ts-s)/dur,1),e=1-Math.pow(1-p,3);el.textContent=Math.floor(e*target)+(p<1?'':suffix);if(p<1)requestAnimationFrame(step);};requestAnimationFrame(step);}
-const statObs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){statObs.disconnect();animCount(document.getElementById('statDiseases'),DB.length,'+');}}),{threshold:.5});
-statObs.observe(document.getElementById('statDiseases'));
+const statElem=document.getElementById('statDiseases');
+if(statElem){
+  const statObs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){statObs.disconnect();animCount(statElem,DB.length,'+');}}),{threshold:.5});
+  statObs.observe(statElem);
+}
 
 /* ── FILTERS ── */
 function toggleFilter(btn, group, value){
