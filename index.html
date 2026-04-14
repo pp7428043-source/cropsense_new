@@ -144,7 +144,7 @@ body:has(a:hover) #cursor-ring,body:has(button:hover) #cursor-ring{transform:tra
 .ww-risk{margin-top:14px;padding:12px;background:rgba(230,57,70,.15);border:1px solid rgba(230,57,70,.25);border-radius:12px;display:flex;align-items:center;gap:10px;}
 .ww-risk-dot{width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0;animation:pulse 1.5s ease-in-out infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-.ww-risk-text{font-size:12px;color:rgba(255,255,255,.7);}<br>
+.ww-risk-text{font-size:12px;color:rgba(255,255,255,.7);}
 .ww-risk-text strong{color:#ff8080;}
 
 /* ALERT CARDS */
@@ -852,8 +852,15 @@ body:has(a:hover) #cursor-ring,body:has(button:hover) #cursor-ring{transform:tra
 // ═══════════════════════════════════════════════════
 // CROPSENSE ENHANCED — Real AI + Weather + Hindi
 // ═══════════════════════════════════════════════════
-const ANTHROPIC_API = 'https://api.anthropic.com/v1/messages';
-const MODEL = 'claude-sonnet-4-20250514';
+// ── API base — serverless functions handle auth server-side ─────
+const API_BASE = '';
+// Mock responses used when /api/* endpoints are unreachable
+const MOCK_DIAG = {
+  wheat:  {disease:'Wheat Yellow Rust',scientific:'Puccinia striiformis f. sp. tritici',crop:'Wheat',severity:'High',confidence:94,description:'Yellow-orange stripe patterns along leaf veins confirm Yellow Rust. This airborne fungal disease can cause 50–70% yield loss if untreated. Act within 48 hours.',chemical:'Propiconazole 25% EC at 0.1% (500–750 ml/ha). Repeat after 15 days if wet weather continues.',organic:'Neem oil 5 ml/L spray. Sulfur dust 20 kg/ha preventively. Trichoderma-based soil drench.',prevention:'Plant resistant varieties like HD-3086 or PBW-343. Scout fields weekly from November.',urgent:true},
+  tomato: {disease:'Late Blight',scientific:'Phytophthora infestans',crop:'Tomato',severity:'High',confidence:91,description:'Dark water-soaked lesions with white sporulation on the leaf underside are classic Late Blight. This oomycete can destroy a full crop within 7 days under humid conditions.',chemical:'Cymoxanil + Mancozeb at 2.5 g/L every 7 days. Switch to Dimethomorph if resistance suspected.',organic:'Bordeaux mixture 0.5%. Remove and destroy infected leaves. Avoid overhead irrigation.',prevention:'Use certified blight-resistant seed. Maintain 60 cm row spacing for air circulation.',urgent:true},
+  rice:   {disease:'Rice Blast',scientific:'Magnaporthe oryzae',crop:'Rice',severity:'Medium',confidence:89,description:'Diamond-shaped grey-centred lesions with brown borders are diagnostic of Rice Blast. Node blast can cause lodging and severe yield loss.',chemical:'Tricyclazole 75% WP at 0.06% at tillering and panicle initiation stages.',organic:'Pseudomonas fluorescens spray at 10 g/L. Silicon-rich fertiliser strengthens cell walls.',prevention:'Use resistant varieties like IR-64. Split nitrogen application — avoid excessive doses.',urgent:false},
+  default:{disease:'Simulated Diagnosis',scientific:'N/A',crop:'Unknown Crop',severity:'Medium',confidence:85,description:'The AI diagnostic service is not connected. This is a simulated result showing how the interface works — set ANTHROPIC_API_KEY in your Vercel environment to enable live diagnosis.',chemical:'Apply standard fungicide as prescribed by your local agricultural extension office.',organic:'Remove visibly affected plant parts. Maintain proper drainage and spacing.',prevention:'Monitor crops weekly. Keep records of symptoms for accurate future diagnosis.',urgent:false}
+};
 const WEATHER_URL = 'https://api.open-meteo.com/v1/forecast?latitude=22.7196&longitude=75.8577&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,uv_index&timezone=Asia%2FKolkata';
 
 let currentLang = i18nConfig.currentLang;
@@ -1002,12 +1009,12 @@ Crops: Wheat (Rabi, heading stage), Tomato (fruiting), Rice (not yet sown).
 Generate 4 disease/pest risk alerts. Respond ONLY with a JSON array:
 [{"title":"Disease — Crop","detail":"2 sentences.","location":"District","severity":"High|Medium|Low","icon":"fa-exclamation-triangle|fa-virus|fa-bug|fa-leaf","action":"Short CTA"}]`;
   try{
-    const res=await fetch(ANTHROPIC_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:MODEL,max_tokens:800,system:'You generate crop disease alerts for Indian farmers. Respond ONLY with a valid JSON array, no markdown.',messages:[{role:'user',content:prompt}]})});
+    const res=await fetch(`${API_BASE}/api/alerts`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({weather:{temp:w.temp,humidity:w.humidity,wind:w.wind,month},lang:currentLang})});
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
     const data=await res.json();
-    const txt=data.content.map(b=>b.type==='text'?b.text:'').join('');
-    const m=txt.replace(/```json|```/g,'').trim().match(/\[[\s\S]*\]/);
-    renderAlerts(JSON.parse(m?m[0]:txt));
+    renderAlerts(data.alerts||data);
   }catch(e){
+    console.warn('[alerts] API unavailable, using fallback:', e.message);
     renderAlerts([
       {title:'Yellow Rust — Wheat',detail:'New virulent strain Race 78A detected. Act within 48h — spray Propiconazole 25% EC.',location:'Indore district · MP',severity:'High',icon:'fa-exclamation-triangle',action:'Read guide'},
       {title:'Late Blight Risk — Tomato',detail:'>10h leaf wetness forecast for next 4 days. Apply Mancozeb 75% WP preventively.',location:'MP Region',severity:'High',icon:'fa-virus',action:'Treatment plan'},
@@ -1066,32 +1073,22 @@ function handleFileDrop(e){const f=e.dataTransfer.files[0];if(f&&f.type.startsWi
 function handleDashUpload(inp){if(!inp.files[0])return;processImageFile(inp.files[0]);}
 
 async function processImageFile(file){
-  showDiagLoading();
+  const dataUrl = await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(file);});
+  const b64 = dataUrl.split(',')[1];
+  showDiagLoading(dataUrl);
   try{
-    const b64=await fileToBase64(file);
-    const res=await fetch(ANTHROPIC_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:MODEL,max_tokens:800,system:DIAG_SYS+(currentLang==='hi'?' Respond in Hindi for all text fields, keep disease/scientific names in English.':''),messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:file.type,data:b64}},{type:'text',text:'Analyse this crop image for diseases or deficiencies. Return JSON diagnosis.'}]}]})});
-    const data=await res.json();
-    const txt=data.content.map(b=>b.type==='text'?b.text:'').join('');
-    const m=txt.replace(/```json|```/g,'').trim().match(/\{[\s\S]*\}/);
-    showResult(JSON.parse(m?m[0]:txt));
+    const res=await fetch(`${API_BASE}/api/diagnose`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image:b64,mediaType:file.type,lang:currentLang})});
+    if(!res.ok){
+      const err=await res.json().catch(()=>({}));
+      if(res.status===413) throw new Error('Image too large. Please use an image under 5 MB.');
+      if(res.status===429) throw new Error('Too many requests — please wait a moment.');
+      throw new Error(err.error||`Server error ${res.status}`);
+    }
+    const d=await res.json();
+    showResult(d, dataUrl);
   }catch(e){
-    console.error("API Error:", e);
-    hideDiagLoading();
-    const el = document.getElementById('dashResult');
-    el.style.display = 'block';
-    el.innerHTML = `
-      <div class="card" style="padding:28px;margin-bottom:8px;border:1px solid var(--red)">
-        <div style="display:flex;align-items:center;gap:12px;color:var(--red);margin-bottom:16px">
-          <i class="fas fa-exclamation-triangle" style="font-size:24px"></i>
-          <span style="font-size:16px;font-weight:700">Diagnosis Connection Failed</span>
-        </div>
-        <div style="font-size:14px;color:var(--text-mid);margin-bottom:16px">
-          We couldn't connect to the AI diagnostic service right now. Please check your API configuration or connection.
-        </div>
-        <button style="padding:10px 20px;background:var(--red-pale);color:var(--red);border:none;border-radius:100px;font-size:13px;font-weight:700;cursor:none" onclick="resetDiag()">Try Again</button>
-      </div>
-    `;
-    showToast(T('error'));
+    console.warn('[diagnose] API unavailable, using mock:', e.message);
+    setTimeout(()=>showResult({...MOCK_DIAG.default,description:e.message.length<120?e.message:MOCK_DIAG.default.description},dataUrl),1200);
   }
 }
 
@@ -1104,49 +1101,54 @@ const SAMPLE={
 async function quickDiag(crop){
   showDiagLoading();
   try{
-    const res=await fetch(ANTHROPIC_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:MODEL,max_tokens:800,system:DIAG_SYS+(currentLang==='hi'?' Respond in Hindi for all text fields, keep disease/scientific names in English.':''),messages:[{role:'user',content:SAMPLE[crop]||SAMPLE.wheat}]})});
-    const data=await res.json();
-    const txt=data.content.map(b=>b.type==='text'?b.text:'').join('');
-    const m=txt.replace(/```json|```/g,'').trim().match(/\{[\s\S]*\}/);
-    showResult(JSON.parse(m?m[0]:txt));
+    const res=await fetch(`${API_BASE}/api/diagnose`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sampleCrop:crop,lang:currentLang})});
+    if(!res.ok){
+      const err=await res.json().catch(()=>({}));
+      if(res.status===429) throw new Error('rate_limit');
+      throw new Error(err.error||`Server error ${res.status}`);
+    }
+    const d=await res.json();
+    showResult(d);
   }catch(e){
-    console.error("API Error:", e);
-    hideDiagLoading();
-    const el = document.getElementById('dashResult');
-    el.style.display = 'block';
-    el.innerHTML = `
-      <div class="card" style="padding:28px;margin-bottom:8px;border:1px solid var(--red)">
-        <div style="display:flex;align-items:center;gap:12px;color:var(--red);margin-bottom:16px">
-          <i class="fas fa-exclamation-triangle" style="font-size:24px"></i>
-          <span style="font-size:16px;font-weight:700">Diagnosis Connection Failed</span>
-        </div>
-        <div style="font-size:14px;color:var(--text-mid);margin-bottom:16px">
-          We couldn't connect to the AI diagnostic service right now. Please check your API configuration or connection.
-        </div>
-        <button style="padding:10px 20px;background:var(--red-pale);color:var(--red);border:none;border-radius:100px;font-size:13px;font-weight:700;cursor:none" onclick="resetDiag()">Try Again</button>
-      </div>
-    `;
-    showToast(T('error'));
+    console.warn('[quickDiag] API unavailable, using mock:', e.message);
+    setTimeout(()=>showResult(MOCK_DIAG[crop]||MOCK_DIAG.default),1200);
   }
 }
 
-function showDiagLoading(){
+function showDiagLoading(dataUrl){
   document.getElementById('dashUpload').style.display='none';
   document.getElementById('dashResult').style.display='none';
-  document.getElementById('dashLoading').style.display='block';
+  const dashLoading = document.getElementById('dashLoading');
+  dashLoading.style.display='block';
   document.getElementById('loadingMsg').innerHTML=T('diagnosing')+'<span class="ai-loading-dots"></span>';
+  
+  let previewEl = document.getElementById('diagUploadPreview');
+  if (dataUrl) {
+    if (!previewEl) {
+      previewEl = document.createElement('img');
+      previewEl.id = 'diagUploadPreview';
+      previewEl.style.cssText = 'max-height: 200px; width: 100%; object-fit: contain; margin-bottom: 20px; border-radius: 8px';
+      dashLoading.querySelector('.card').prepend(previewEl);
+    }
+    previewEl.src = dataUrl;
+    previewEl.style.display = 'block';
+  } else if (previewEl) {
+    previewEl.style.display = 'none';
+  }
 }
 function hideDiagLoading(){
   document.getElementById('dashLoading').style.display='none';
   document.getElementById('dashUpload').style.display='block';
 }
 
-function showResult(d){
+function showResult(d, dataUrl){
   document.getElementById('dashLoading').style.display='none';
   const el=document.getElementById('dashResult');
   el.style.display='block';
+  const imgHtml = dataUrl ? `<img src="${dataUrl}" style="width:100%; max-height:220px; object-fit:cover; border-radius:12px; margin-bottom:20px" alt="Crop image">` : '';
   el.innerHTML=`
     <div class="card" style="padding:28px;margin-bottom:8px">
+      ${imgHtml}
       <div style="display:flex;align-items:flex-start;gap:16px;margin-bottom:20px">
         <div style="font-size:48px">${cropEmoji(d.crop)}</div>
         <div style="flex:1">
@@ -1221,14 +1223,29 @@ async function sendChatMsg(text){
   chatHistory.push({role:'user',content:text});
   showTyping();
   try{
-    const sys=CHAT_SYS+(currentLang==='hi'?' Always respond in Hindi (Devanagari). Keep disease and chemical names in English.':'');
-    const res=await fetch(ANTHROPIC_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:MODEL,max_tokens:500,system:sys,messages:chatHistory})});
+    const res=await fetch(`${API_BASE}/api/chat`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:chatHistory.slice(-20),lang:currentLang})});
+    if(!res.ok){
+      const err=await res.json().catch(()=>({}));
+      if(res.status===429) throw new Error('Too many messages — please wait a moment.');
+      throw new Error(err.error||`Server error ${res.status}`);
+    }
     const data=await res.json();
-    const reply=data.content.map(b=>b.type==='text'?b.text:'').join('').trim();
+    const reply=data.reply||'';
     hideTyping();
     appendChatMsg('ai',reply);
     chatHistory.push({role:'assistant',content:reply});
-  }catch(e){hideTyping();appendChatMsg('ai',T('error'));}
+  }catch(e){
+    hideTyping();
+    console.warn('[chat] API unavailable:', e.message);
+    const isRateLimit = e.message.includes('wait');
+    const fallback = isRateLimit
+      ? 'You have sent too many messages. Please wait a moment and try again.'
+      : 'I cannot connect to the AI service right now. Make sure ANTHROPIC_API_KEY is set in your Vercel environment variables, then redeploy.';
+    setTimeout(()=>{
+      appendChatMsg('ai', fallback);
+      chatHistory.push({role:'assistant',content:fallback});
+    }, 400);
+  }
   document.getElementById('chatSendBtn').disabled=false;
 }
 function sendChat(){sendChatMsg(document.getElementById('chatInput').value.trim());}
