@@ -250,13 +250,14 @@ textarea{padding:12px 14px;resize:vertical;min-height:80px;line-height:1.55;}
 </style>
 </head>
 <body>
+<script src="../js/i18n.js"></script>
 <div id="cursor"></div>
 <div id="cursor-ring"></div>
 <div class="toast" id="toast"><i class="fas fa-check-circle"></i><span id="toastMsg"></span></div>
 
 <!-- NAV -->
 <nav>
-  <a class="nav-logo" href="cropsense_v2.html">
+  <a class="nav-logo" href="../index.html">
     <svg width="36" height="36" viewBox="0 0 40 40" fill="none">
       <rect width="40" height="40" rx="12" fill="#2d6a4f"/>
       <path d="M20 6C13.4 6 8 11.4 8 18c0 4.6 2.5 8.6 6.3 10.8V34h11.4v-5.2C29.5 26.6 32 22.6 32 18c0-6.6-5.4-12-12-12z" fill="#b7e4c7" opacity="0.4"/>
@@ -266,9 +267,13 @@ textarea{padding:12px 14px;resize:vertical;min-height:80px;line-height:1.55;}
     <span class="nav-logo-text">Crop<span>Sense</span></span>
   </a>
   <div class="nav-right">
-    <a href="cropsense_v2.html" class="nav-link">Home</a>
-    <a href="library.html" class="nav-link">Library</a>
-    <a href="cropsense_v2.html" class="nav-back"><i class="fas fa-arrow-left"></i> Back to site</a>
+    <a href="../index.html" class="nav-link" data-i18n="auth.nav.home">Home</a>
+    <a href="../library.html" class="nav-link" data-i18n="auth.nav.library">Library</a>
+    <div style="display:flex;align-items:center;background:var(--parchment);border-radius:100px;padding:3px">
+      <button id="langEn" data-lang-btn="en" onclick="i18nSetLang('en')" style="padding:4px 10px;border-radius:100px;border:none;background:transparent;font-size:12px;font-weight:700;color:var(--text-muted);cursor:none">EN</button>
+      <button id="langHi" data-lang-btn="hi" onclick="i18nSetLang('hi')" style="padding:4px 10px;border-radius:100px;border:none;background:transparent;font-size:12px;font-weight:700;color:var(--text-muted);cursor:none">हि</button>
+    </div>
+    <a href="../index.html" class="nav-back"><i class="fas fa-arrow-left"></i> <span data-i18n="auth.nav.back">Back to site</span></a>
   </div>
 </nav>
 
@@ -280,32 +285,32 @@ textarea{padding:12px 14px;resize:vertical;min-height:80px;line-height:1.55;}
     <div class="al-bg-ring"></div>
     <div class="al-watermark">GROW</div>
     <div class="al-content">
-      <div class="al-badge"><span class="al-badge-dot"></span><i class="fas fa-award" style="font-size:10px"></i>#1 Agri-AI Platform · India</div>
-      <div class="al-title">Join <em>12 million</em><br>farmers already<br>protecting their<br>crops.</div>
-      <div class="al-desc">Free forever. AI diagnosis in 3 seconds. Trusted by smallholder farmers and commercial growers across India.</div>
+      <div class="al-badge"><span class="al-badge-dot"></span><i class="fas fa-award" style="font-size:10px"></i><span data-i18n="auth.left.badge">#1 Agri-AI Platform · India</span></div>
+      <div class="al-title"><span data-i18n="auth.left.title1">Join</span> <em data-i18n="auth.left.title2">12 million</em><br><span data-i18n="auth.left.title3">farmers already</span><br><span data-i18n="auth.left.title4">protecting their</span><br><span data-i18n="auth.left.title5">crops.</span></div>
+      <div class="al-desc" data-i18n="auth.left.desc">Free forever. AI diagnosis in 3 seconds. Trusted by smallholder farmers and commercial growers across India.</div>
       <div class="al-proof">
         <div class="proof-item">
           <div class="proof-icon"><i class="fas fa-microscope"></i></div>
-          <div class="proof-text"><h4>AI diagnosis in 3 seconds</h4><p>97% accuracy · 500+ diseases detected</p></div>
+          <div class="proof-text"><h4 data-i18n="auth.proof1.title">AI diagnosis in 3 seconds</h4><p data-i18n="auth.proof1.sub">97% accuracy · 500+ diseases detected</p></div>
         </div>
         <div class="proof-item">
           <div class="proof-icon"><i class="fas fa-cloud-sun-rain"></i></div>
-          <div class="proof-text"><h4>Disease outbreak alerts</h4><p>48h advance warning for your district</p></div>
+          <div class="proof-text"><h4 data-i18n="auth.proof2.title">Disease outbreak alerts</h4><p data-i18n="auth.proof2.sub">48h advance warning for your district</p></div>
         </div>
         <div class="proof-item">
           <div class="proof-icon"><i class="fas fa-users"></i></div>
-          <div class="proof-text"><h4>Farmer community</h4><p>Get answers from experts in under 4 hours</p></div>
+          <div class="proof-text"><h4 data-i18n="auth.proof3.title">Farmer community</h4><p data-i18n="auth.proof3.sub">Get answers from experts in under 4 hours</p></div>
         </div>
         <div class="proof-item">
           <div class="proof-icon"><i class="fas fa-wifi" style="opacity:.45"></i></div>
-          <div class="proof-text"><h4>Works offline</h4><p>No signal in the field? No problem.</p></div>
+          <div class="proof-text"><h4 data-i18n="auth.proof4.title">Works offline</h4><p data-i18n="auth.proof4.sub">No signal in the field? No problem.</p></div>
         </div>
       </div>
       <div class="al-testi">
-        <blockquote>"CropSense saved my wheat crop. I got a yellow rust alert 2 days before I could see anything. Sprayed the same day — zero yield loss."</blockquote>
+        <blockquote data-i18n="auth.testi.quote">"CropSense saved my wheat crop. I got a yellow rust alert 2 days before I could see anything. Sprayed the same day — zero yield loss."</blockquote>
         <div class="al-testi-author">
           <div class="testi-av">RS</div>
-          <div class="testi-meta"><strong>Ramesh Sharma</strong>Wheat farmer · Indore, MP</div>
+          <div class="testi-meta"><strong data-i18n="auth.testi.name">Ramesh Sharma</strong><span data-i18n="auth.testi.role">Wheat farmer · Indore, MP</span></div>
         </div>
       </div>
     </div>
@@ -317,8 +322,8 @@ textarea{padding:12px 14px;resize:vertical;min-height:80px;line-height:1.55;}
 
       <!-- TABS -->
       <div class="auth-tabs" id="authTabs">
-        <button class="auth-tab active" id="tabRegister" onclick="switchTab('register')">Create account</button>
-        <button class="auth-tab" id="tabLogin" onclick="switchTab('login')">Sign in</button>
+        <button class="auth-tab active" id="tabRegister" onclick="switchTab('register')" data-i18n="auth.tab.register">Create account</button>
+        <button class="auth-tab" id="tabLogin" onclick="switchTab('login')" data-i18n="auth.tab.login">Sign in</button>
       </div>
 
       <!-- ══════════════════════════════
@@ -337,33 +342,33 @@ textarea{padding:12px 14px;resize:vertical;min-height:80px;line-height:1.55;}
           <div class="step-dot pending" id="sdot4"><i class="fas fa-check" style="font-size:12px"></i></div>
         </div>
         <div class="step-label-row">
-          <div class="step-label active" id="slabel1">Account</div>
-          <div class="step-label" id="slabel2">Profile</div>
-          <div class="step-label" id="slabel3">Verify</div>
-          <div class="step-label" id="slabel4">Done</div>
+          <div class="step-label active" id="slabel1" data-i18n="auth.step1">Account</div>
+          <div class="step-label" id="slabel2" data-i18n="auth.step2">Profile</div>
+          <div class="step-label" id="slabel3" data-i18n="auth.step3">Verify</div>
+          <div class="step-label" id="slabel4" data-i18n="auth.step4">Done</div>
         </div>
 
         <!-- STEP 1: Account basics -->
         <div class="form-page active" id="regStep1">
-          <div class="form-section-label"><i class="fas fa-user"></i>Your account</div>
+          <div class="form-section-label"><i class="fas fa-user"></i><span data-i18n="auth.reg.section.account">Your account</span></div>
 
           <!-- Social auth -->
           <div class="social-auth">
             <button class="sauth-btn" onclick="socialAuth('Google')">
               <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-              Continue with Google
+              <span data-i18n="auth.social.google">Continue with Google</span>
             </button>
             <button class="sauth-btn" onclick="socialAuth('Facebook')">
               <i class="fab fa-facebook" style="color:#1877f2;font-size:18px"></i>
-              Facebook
+              <span data-i18n="auth.social.facebook">Facebook</span>
             </button>
           </div>
 
-          <div class="divider"><span>or register with email</span></div>
+          <div class="divider"><span data-i18n="auth.divider.email">or register with email</span></div>
 
           <div class="form-row">
             <div class="form-group">
-              <label class="label-required">First name</label>
+              <label class="label-required" data-i18n="auth.label.firstname">First name</label>
               <div class="input-wrap">
                 <input type="text" id="firstName" placeholder="Ramesh" oninput="validateField(this)" onblur="validateField(this,true)">
                 <i class="fas fa-user input-icon"></i>
@@ -371,7 +376,7 @@ textarea{padding:12px 14px;resize:vertical;min-height:80px;line-height:1.55;}
               <div class="field-error" id="firstName-err"><i class="fas fa-exclamation-circle"></i><span>Required</span></div>
             </div>
             <div class="form-group">
-              <label class="label-required">Last name</label>
+              <label class="label-required" data-i18n="auth.label.lastname">Last name</label>
               <div class="input-wrap">
                 <input type="text" id="lastName" placeholder="Sharma" oninput="validateField(this)" onblur="validateField(this,true)">
                 <i class="fas fa-user input-icon"></i>
@@ -381,7 +386,7 @@ textarea{padding:12px 14px;resize:vertical;min-height:80px;line-height:1.55;}
           </div>
 
           <div class="form-group">
-            <label class="label-required">Email address</label>
+            <label class="label-required" data-i18n="auth.label.email">Email address</label>
             <div class="input-wrap">
               <input type="email" id="regEmail" placeholder="ramesh@example.com" oninput="validateEmail(this)" onblur="validateEmail(this,true)">
               <i class="fas fa-envelope input-icon"></i>
@@ -390,7 +395,7 @@ textarea{padding:12px 14px;resize:vertical;min-height:80px;line-height:1.55;}
           </div>
 
           <div class="form-group">
-            <label class="label-required">Mobile number</label>
+            <label class="label-required" data-i18n="auth.label.mobile">Mobile number</label>
             <div class="phone-group">
               <div class="phone-prefix">🇮🇳 +91</div>
               <input type="tel" id="regPhone" placeholder="98765 43210" maxlength="10" oninput="validatePhone(this)" onblur="validatePhone(this,true)" style="border-radius:0 12px 12px 0;padding-left:14px;">
@@ -399,7 +404,7 @@ textarea{padding:12px 14px;resize:vertical;min-height:80px;line-height:1.55;}
           </div>
 
           <div class="form-group">
-            <label class="label-required">Password</label>
+            <label class="label-required" data-i18n="auth.label.password">Password</label>
             <div class="input-wrap" style="position:relative">
               <input type="password" id="regPassword" placeholder="Min. 8 characters" oninput="checkPasswordStrength(this)" onblur="validatePassword(this,true)">
               <i class="fas fa-lock input-icon"></i>
@@ -413,7 +418,7 @@ textarea{padding:12px 14px;resize:vertical;min-height:80px;line-height:1.55;}
           </div>
 
           <div class="form-group">
-            <label class="label-required">Confirm password</label>
+            <label class="label-required" data-i18n="auth.label.confirm">Confirm password</label>
             <div class="input-wrap">
               <input type="password" id="regConfirm" placeholder="Repeat password" onblur="validateConfirm(this,true)">
               <i class="fas fa-lock input-icon"></i>
@@ -423,26 +428,26 @@ textarea{padding:12px 14px;resize:vertical;min-height:80px;line-height:1.55;}
 
           <button class="submit-btn" onclick="goStep(2)" id="step1Btn">
             <div class="btn-spinner"></div>
-            <span class="btn-text">Continue <i class="fas fa-arrow-right" style="margin-left:6px"></i></span>
+            <span class="btn-text" data-i18n="auth.btn.continue">Continue <i class="fas fa-arrow-right" style="margin-left:6px"></i></span>
           </button>
 
-          <div class="switch-text">Already have an account? <a onclick="switchTab('login')">Sign in</a></div>
+          <div class="switch-text"><span data-i18n="auth.switch.signin">Already have an account?</span> <a onclick="switchTab('login')" data-i18n="auth.switch.signin.link">Sign in</a></div>
         </div>
 
         <!-- STEP 2: Farmer profile -->
         <div class="form-page" id="regStep2">
           <button class="form-page-back" onclick="goStep(1)"><i class="fas fa-arrow-left"></i>Back</button>
-          <div class="form-section-label"><i class="fas fa-id-card"></i>Your farming profile</div>
-          <div class="field-hint" style="margin-bottom:20px;font-size:13px;color:var(--text-muted)">This helps us give you relevant disease alerts and recommendations for your region and crops.</div>
+          <div class="form-section-label"><i class="fas fa-id-card"></i><span data-i18n="auth.reg.section.profile">Your farming profile</span></div>
+          <div class="field-hint" style="margin-bottom:20px;font-size:13px;color:var(--text-muted)" data-i18n="auth.reg.profile.hint">This helps us give you relevant disease alerts and recommendations for your region and crops.</div>
 
           <div class="form-group">
-            <label class="label-required">I am a</label>
+            <label class="label-required" data-i18n="auth.reg.farmer.label">I am a</label>
             <div class="role-grid" id="roleGrid">
               <div class="role-card selected" onclick="selectRole(this,'farmer')">
                 <input type="radio" name="role" value="farmer" checked>
                 <div class="role-card-inner">
                   <div class="role-icon">👨‍🌾</div>
-                  <div><div class="role-label">Farmer</div><div class="role-sub">I grow crops</div></div>
+                  <div><div class="role-label" data-i18n="auth.role.farmer">Farmer</div><div class="role-sub" data-i18n="auth.role.farmer.sub">I grow crops</div></div>
                   <div class="role-check"><i class="fas fa-check" style="font-size:10px"></i></div>
                 </div>
               </div>
@@ -450,7 +455,7 @@ textarea{padding:12px 14px;resize:vertical;min-height:80px;line-height:1.55;}
                 <input type="radio" name="role" value="agronomist">
                 <div class="role-card-inner">
                   <div class="role-icon">🔬</div>
-                  <div><div class="role-label">Agronomist</div><div class="role-sub">I advise farmers</div></div>
+                  <div><div class="role-label" data-i18n="auth.role.agronomist">Agronomist</div><div class="role-sub" data-i18n="auth.role.agronomist.sub">I advise farmers</div></div>
                   <div class="role-check"><i class="fas fa-check" style="font-size:10px;display:none"></i></div>
                 </div>
               </div>
@@ -458,7 +463,7 @@ textarea{padding:12px 14px;resize:vertical;min-height:80px;line-height:1.55;}
                 <input type="radio" name="role" value="dealer">
                 <div class="role-card-inner">
                   <div class="role-icon">🏪</div>
-                  <div><div class="role-label">Input Dealer</div><div class="role-sub">I sell agri inputs</div></div>
+                  <div><div class="role-label" data-i18n="auth.role.dealer">Input Dealer</div><div class="role-sub" data-i18n="auth.role.dealer.sub">I sell agri inputs</div></div>
                   <div class="role-check"><i class="fas fa-check" style="font-size:10px;display:none"></i></div>
                 </div>
               </div>
@@ -466,7 +471,7 @@ textarea{padding:12px 14px;resize:vertical;min-height:80px;line-height:1.55;}
                 <input type="radio" name="role" value="researcher">
                 <div class="role-card-inner">
                   <div class="role-icon">🎓</div>
-                  <div><div class="role-label">Researcher</div><div class="role-sub">Academic / NGO</div></div>
+                  <div><div class="role-label" data-i18n="auth.role.researcher">Researcher</div><div class="role-sub" data-i18n="auth.role.researcher.sub">Academic / NGO</div></div>
                   <div class="role-check"><i class="fas fa-check" style="font-size:10px;display:none"></i></div>
                 </div>
               </div>
@@ -475,7 +480,7 @@ textarea{padding:12px 14px;resize:vertical;min-height:80px;line-height:1.55;}
 
           <div class="form-row">
             <div class="form-group">
-              <label class="label-required">State</label>
+              <label class="label-required" data-i18n="auth.label.state">State</label>
               <div class="input-wrap">
                 <select id="stateSelect" onchange="loadDistricts(this.value)">
                   <option value="">Select state</option>
@@ -491,7 +496,7 @@ textarea{padding:12px 14px;resize:vertical;min-height:80px;line-height:1.55;}
               </div>
             </div>
             <div class="form-group">
-              <label>District</label>
+              <label data-i18n="auth.label.district">District</label>
               <div class="input-wrap">
                 <input type="text" id="districtInput" placeholder="e.g. Ludhiana">
                 <i class="fas fa-map input-icon"></i>
@@ -554,13 +559,13 @@ textarea{padding:12px 14px;resize:vertical;min-height:80px;line-height:1.55;}
           </div>
 
           <div class="form-group">
-            <label>About you (optional)</label>
+            <label data-i18n="auth.label.about">About you (optional)</label>
             <textarea id="aboutMe" placeholder="Tell the community a bit about your farm and experience…" class="no-icon" style="padding-left:14px"></textarea>
           </div>
 
           <button class="submit-btn" onclick="goStep(3)">
             <div class="btn-spinner"></div>
-            <span class="btn-text">Continue to verification <i class="fas fa-arrow-right" style="margin-left:6px"></i></span>
+            <span class="btn-text" data-i18n="auth.btn.continue.verify">Continue to verification <i class="fas fa-arrow-right" style="margin-left:6px"></i></span>
           </button>
         </div>
 
@@ -569,8 +574,8 @@ textarea{padding:12px 14px;resize:vertical;min-height:80px;line-height:1.55;}
           <button class="form-page-back" onclick="goStep(2)"><i class="fas fa-arrow-left"></i>Back</button>
           <div style="text-align:center;margin-bottom:28px;">
             <div style="width:64px;height:64px;background:var(--pale);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:26px">📱</div>
-            <div style="font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--forest);margin-bottom:8px">Verify your number</div>
-            <div style="font-size:14px;color:var(--text-muted);line-height:1.55">We sent a 6-digit code to<br><strong style="color:var(--forest)" id="phoneDisplay">+91 98765 43210</strong></div>
+            <div style="font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--forest);margin-bottom:8px" data-i18n="auth.otp.title">Verify your number</div>
+            <div style="font-size:14px;color:var(--text-muted);line-height:1.55"><span data-i18n="auth.otp.sent">We sent a 6-digit code to</span><br><strong style="color:var(--forest)" id="phoneDisplay">+91 98765 43210</strong></div>
           </div>
 
           <div class="otp-row">
@@ -582,18 +587,18 @@ textarea{padding:12px 14px;resize:vertical;min-height:80px;line-height:1.55;}
             <input class="otp-input" maxlength="1" type="text" inputmode="numeric" id="otp6" oninput="otpInput(this,6)">
           </div>
           <div class="otp-resend">
-            Didn't receive it?
-            <button id="resendBtn" onclick="resendOtp()" disabled>Resend in <span class="otp-timer" id="otpTimer">60s</span></button>
+            <span data-i18n="auth.otp.resend">Didn't receive it?</span>
+            <button id="resendBtn" onclick="resendOtp()" disabled><span data-i18n="auth.otp.resend.btn">Resend in</span> <span class="otp-timer" id="otpTimer">60s</span></button>
           </div>
 
           <div style="margin-top:20px;padding:16px;background:var(--pale);border-radius:12px;font-size:13px;color:var(--mid);display:flex;gap:8px;align-items:flex-start">
             <i class="fas fa-info-circle" style="margin-top:2px;flex-shrink:0"></i>
-            <span>For this demo, use <strong>123456</strong> as the OTP code.</span>
+            <span><span data-i18n="auth.otp.demo">For this demo, use</span> <strong data-i18n="auth.otp.demo.code">123456</strong> <span data-i18n="auth.otp.demo.suffix">as the OTP code.</span></span>
           </div>
 
           <button class="submit-btn" onclick="verifyOtp()" id="otpVerifyBtn" style="margin-top:20px" disabled>
             <div class="btn-spinner"></div>
-            <span class="btn-text"><i class="fas fa-shield-alt" style="margin-right:8px"></i>Verify & create account</span>
+            <span class="btn-text"><i class="fas fa-shield-alt" style="margin-right:8px"></i><span data-i18n="auth.btn.verify">Verify & create account</span></span>
           </button>
         </div>
 
@@ -601,18 +606,18 @@ textarea{padding:12px 14px;resize:vertical;min-height:80px;line-height:1.55;}
         <div class="form-page" id="regStep4">
           <div class="success-state show" id="successState">
             <div class="success-icon"><i class="fas fa-check" style="color:var(--mid)"></i></div>
-            <h2>Welcome to CropSense! 🌱</h2>
-            <p>Your account is ready. You're now part of a community of 12 million farmers protecting their harvests with AI.</p>
+            <h2 data-i18n="auth.success.title">Welcome to CropSense! 🌱</h2>
+            <p data-i18n="auth.success.desc">Your account is ready. You're now part of a community of 12 million farmers protecting their harvests with AI.</p>
             <div class="success-user-card" id="successCard"></div>
             <div class="checkbox-row" style="text-align:left;justify-content:flex-start">
               <input type="checkbox" id="alertsCheck" checked>
-              <label for="alertsCheck" class="checkbox-label">Send me disease outbreak alerts for my district</label>
+              <label for="alertsCheck" class="checkbox-label" data-i18n="auth.success.alerts">Send me disease outbreak alerts for my district</label>
             </div>
             <div class="checkbox-row" style="margin-bottom:20px">
               <input type="checkbox" id="weeklyCheck" checked>
-              <label for="weeklyCheck" class="checkbox-label">Weekly farming tips from CropSense agronomists</label>
+              <label for="weeklyCheck" class="checkbox-label" data-i18n="auth.success.weekly">Weekly farming tips from CropSense agronomists</label>
             </div>
-            <button class="to-dashboard-btn" onclick="toDashboard()"><i class="fas fa-seedling"></i>Go to my dashboard</button>
+            <button class="to-dashboard-btn" onclick="toDashboard()"><i class="fas fa-seedling"></i><span data-i18n="auth.btn.dashboard">Go to my dashboard</span></button>
           </div>
         </div>
       </div>
@@ -624,23 +629,23 @@ textarea{padding:12px 14px;resize:vertical;min-height:80px;line-height:1.55;}
 
         <!-- Normal login -->
         <div id="loginNormal">
-          <div class="form-section-label"><i class="fas fa-sign-in-alt"></i>Welcome back</div>
+          <div class="form-section-label"><i class="fas fa-sign-in-alt"></i><span data-i18n="auth.login.section">Welcome back</span></div>
 
           <div class="social-auth">
             <button class="sauth-btn" onclick="socialAuth('Google')">
               <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-              Continue with Google
+              <span data-i18n="auth.social.google">Continue with Google</span>
             </button>
             <button class="sauth-btn" onclick="socialAuth('Facebook')">
               <i class="fab fa-facebook" style="color:#1877f2;font-size:18px"></i>
-              Facebook
+              <span data-i18n="auth.social.facebook">Facebook</span>
             </button>
           </div>
 
-          <div class="divider"><span>or sign in with email</span></div>
+          <div class="divider"><span data-i18n="auth.divider.signin">or sign in with email</span></div>
 
           <div class="form-group">
-            <label class="label-required">Email or mobile number</label>
+            <label class="label-required" data-i18n="auth.label.email.login">Email or mobile number</label>
             <div class="input-wrap">
               <input type="email" id="loginEmail" placeholder="ramesh@example.com" oninput="clearErr('loginEmail')">
               <i class="fas fa-envelope input-icon"></i>
@@ -650,8 +655,8 @@ textarea{padding:12px 14px;resize:vertical;min-height:80px;line-height:1.55;}
 
           <div class="form-group">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px">
-              <label class="label-required" style="margin-bottom:0">Password</label>
-              <a class="forgot-link" onclick="showForgot()">Forgot password?</a>
+              <label class="label-required" style="margin-bottom:0" data-i18n="auth.label.password">Password</label>
+              <a class="forgot-link" onclick="showForgot()" data-i18n="auth.forgot">Forgot password?</a>
             </div>
             <div class="input-wrap" style="position:relative">
               <input type="password" id="loginPassword" placeholder="Your password" oninput="clearErr('loginPassword')">
@@ -663,12 +668,12 @@ textarea{padding:12px 14px;resize:vertical;min-height:80px;line-height:1.55;}
 
           <div class="checkbox-row">
             <input type="checkbox" id="rememberMe" checked>
-            <label for="rememberMe" class="checkbox-label">Keep me signed in on this device</label>
+            <label for="rememberMe" class="checkbox-label" data-i18n="auth.label.remember">Keep me signed in on this device</label>
           </div>
 
           <button class="submit-btn" onclick="doLogin()" id="loginBtn">
             <div class="btn-spinner"></div>
-            <span class="btn-text"><i class="fas fa-sign-in-alt" style="margin-right:8px"></i>Sign in</span>
+            <span class="btn-text"><i class="fas fa-sign-in-alt" style="margin-right:8px"></i><span data-i18n="auth.btn.signin">Sign in</span></span>
           </button>
 
           <div style="margin-top:16px;padding:14px;background:var(--pale);border-radius:12px;font-size:13px;color:var(--mid);display:flex;gap:8px;align-items:flex-start">
@@ -676,19 +681,19 @@ textarea{padding:12px 14px;resize:vertical;min-height:80px;line-height:1.55;}
             <span>Demo credentials: <strong>farmer@cropsense.in</strong> / <strong>Demo@1234</strong></span>
           </div>
 
-          <div class="switch-text">New to CropSense? <a onclick="switchTab('register')">Create free account</a></div>
+          <div class="switch-text"><span data-i18n="auth.switch.register">New to CropSense?</span> <a onclick="switchTab('register')" data-i18n="auth.switch.register.link">Create free account</a></div>
         </div>
 
         <!-- Forgot password -->
         <div id="loginForgot" style="display:none">
-          <button class="form-page-back" onclick="hideForgot()"><i class="fas fa-arrow-left"></i>Back to sign in</button>
+          <button class="form-page-back" onclick="hideForgot()"><i class="fas fa-arrow-left"></i><span data-i18n="auth.back.signin">Back to sign in</span></button>
           <div style="text-align:center;margin-bottom:28px">
             <div style="width:60px;height:60px;background:var(--pale);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:24px">🔐</div>
-            <div style="font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--forest);margin-bottom:6px">Reset your password</div>
-            <div style="font-size:14px;color:var(--text-muted)">We'll send a reset link to your email</div>
+            <div style="font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--forest);margin-bottom:6px" data-i18n="auth.reset.title">Reset your password</div>
+            <div style="font-size:14px;color:var(--text-muted)" data-i18n="auth.reset.desc">We'll send a reset link to your email</div>
           </div>
           <div class="form-group">
-            <label class="label-required">Email address</label>
+            <label class="label-required" data-i18n="auth.label.email">Email address</label>
             <div class="input-wrap">
               <input type="email" id="resetEmail" placeholder="ramesh@example.com">
               <i class="fas fa-envelope input-icon"></i>
@@ -696,7 +701,7 @@ textarea{padding:12px 14px;resize:vertical;min-height:80px;line-height:1.55;}
           </div>
           <button class="submit-btn" onclick="sendReset()">
             <div class="btn-spinner"></div>
-            <span class="btn-text"><i class="fas fa-paper-plane" style="margin-right:8px"></i>Send reset link</span>
+            <span class="btn-text"><i class="fas fa-paper-plane" style="margin-right:8px"></i><span data-i18n="auth.btn.reset">Send reset link</span></span>
           </button>
         </div>
       </div>

@@ -226,30 +226,30 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:72px;padding:0 5%;dis
       <div class="modal-sci" id="modalSci">Scientific name</div>
       <div class="modal-badges" id="modalBadges"></div>
       <div class="modal-tabs">
-        <button class="mtab active" onclick="switchMTab(this,'overview')"><i class="fas fa-info-circle" style="margin-right:5px"></i>Overview</button>
-        <button class="mtab" onclick="switchMTab(this,'treatment')"><i class="fas fa-pills" style="margin-right:5px"></i>Treatment</button>
-        <button class="mtab" onclick="switchMTab(this,'prevention')"><i class="fas fa-shield-alt" style="margin-right:5px"></i>Prevention</button>
+        <button class="mtab active" onclick="switchMTab(this,'overview')"><i class="fas fa-info-circle" style="margin-right:5px"></i><span data-i18n="lib.modal.tab.overview">Overview</span></button>
+        <button class="mtab" onclick="switchMTab(this,'treatment')"><i class="fas fa-pills" style="margin-right:5px"></i><span data-i18n="lib.modal.tab.treatment">Treatment</span></button>
+        <button class="mtab" onclick="switchMTab(this,'prevention')"><i class="fas fa-shield-alt" style="margin-right:5px"></i><span data-i18n="lib.modal.tab.prevention">Prevention</span></button>
       </div>
       <div class="mtab-content active" id="mtab-overview">
-        <div class="modal-section-title">Description</div>
+        <div class="modal-section-title" data-i18n="lib.modal.desc">Description</div>
         <div class="modal-text" id="modalDesc"></div>
-        <div class="modal-section-title" style="margin-top:20px">Symptoms</div>
+        <div class="modal-section-title" style="margin-top:20px" data-i18n="lib.modal.symptoms">Symptoms</div>
         <ul class="modal-steps" id="modalSymptoms"></ul>
-        <div class="modal-section-title" style="margin-top:20px">Favourable conditions</div>
+        <div class="modal-section-title" style="margin-top:20px" data-i18n="lib.modal.conditions">Favourable conditions</div>
         <div class="modal-text" id="modalConditions"></div>
       </div>
       <div class="mtab-content" id="mtab-treatment">
         <div class="treat-pair">
-          <div class="tp-card"><h5><i class="fas fa-flask" style="color:#3498db"></i>Chemical</h5><p id="modalChem"></p></div>
-          <div class="tp-card"><h5><i class="fas fa-leaf" style="color:var(--bright)"></i>Organic</h5><p id="modalOrg"></p></div>
+          <div class="tp-card"><h5><i class="fas fa-flask" style="color:#3498db"></i><span data-i18n="lib.modal.chemical">Chemical</span></h5><p id="modalChem"></p></div>
+          <div class="tp-card"><h5><i class="fas fa-leaf" style="color:var(--bright)"></i><span data-i18n="lib.modal.organic">Organic</span></h5><p id="modalOrg"></p></div>
         </div>
-        <div class="modal-section-title" style="margin-top:20px">Application steps</div>
+        <div class="modal-section-title" style="margin-top:20px" data-i18n="lib.modal.steps">Application steps</div>
         <ul class="modal-steps" id="modalTreatSteps"></ul>
       </div>
       <div class="mtab-content" id="mtab-prevention">
         <ul class="modal-steps" id="modalPrevSteps"></ul>
       </div>
-      <a href="cropsense_v2.html#diagnose" class="diag-btn"><i class="fas fa-microscope"></i>Diagnose this disease with AI</a>
+      <a href="index.html" class="diag-btn"><i class="fas fa-microscope"></i><span data-i18n="lib.modal.diag.btn">Diagnose this disease with AI</span></a>
     </div>
   </div>
 </div>
@@ -272,8 +272,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:72px;padding:0 5%;dis
     <li><a href="cropsense_v2.html#diagnose" data-i18n="nav.diagnose">AI Diagnosis</a></li>
     <li>
       <div style="display:flex;align-items:center;background:var(--parchment);border-radius:100px;padding:3px;margin-left:8px">
-        <button id="langEn" onclick="i18nSetLang('en')" style="padding:4px 10px;border-radius:100px;border:none;background:transparent;font-size:12px;font-weight:700;color:var(--text-muted);cursor:none">EN</button>
-        <button id="langHi" onclick="i18nSetLang('hi')" style="padding:4px 10px;border-radius:100px;border:none;background:transparent;font-size:12px;font-weight:700;color:var(--text-muted);cursor:none">हि</button>
+        <button id="langEn" data-lang-btn="en" onclick="i18nSetLang('en')" style="padding:4px 10px;border-radius:100px;border:none;background:transparent;font-size:12px;font-weight:700;color:var(--text-muted);cursor:none">EN</button>
+        <button id="langHi" data-lang-btn="hi" onclick="i18nSetLang('hi')" style="padding:4px 10px;border-radius:100px;border:none;background:transparent;font-size:12px;font-weight:700;color:var(--text-muted);cursor:none">हि</button>
       </div>
     </li>
   </ul>
@@ -282,14 +282,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:72px;padding:0 5%;dis
 <!-- HERO -->
 <div class="lib-hero">
   <div class="lib-hero-inner">
-    <div class="hero-tag"><i class="fas fa-book-medical"></i>Disease Library</div>
-    <h1>Every crop disease.<br><em>One place.</em></h1>
-    <p>Browse our comprehensive database of 500+ crop diseases — complete with symptoms, treatments, prevention strategies, and AI-powered diagnosis.</p>
+    <div class="hero-tag"><i class="fas fa-book-medical"></i><span data-i18n="lib.hero.tag">Disease Library</span></div>
+    <h1><span data-i18n="lib.hero.h1.line1">Every crop disease.</span><br><em data-i18n="lib.hero.h1.line2">One place.</em></h1>
+    <p data-i18n="lib.hero.desc">Browse our comprehensive database of 500+ crop diseases — complete with symptoms, treatments, prevention strategies, and AI-powered diagnosis.</p>
     <div class="lib-stats reveal">
-      <div class="lstat"><div class="lstat-num" id="statDiseases">0</div><div class="lstat-label">Diseases</div></div>
-      <div class="lstat"><div class="lstat-num">28</div><div class="lstat-label">Crop types</div></div>
-      <div class="lstat"><div class="lstat-num">6</div><div class="lstat-label">Categories</div></div>
-      <div class="lstat"><div class="lstat-num">14</div><div class="lstat-label">Languages</div></div>
+      <div class="lstat"><div class="lstat-num" id="statDiseases">0</div><div class="lstat-label" data-i18n="lib.stat.diseases">Diseases</div></div>
+      <div class="lstat"><div class="lstat-num">28</div><div class="lstat-label" data-i18n="lib.stat.crops">Crop types</div></div>
+      <div class="lstat"><div class="lstat-num">6</div><div class="lstat-label" data-i18n="lib.stat.categories">Categories</div></div>
+      <div class="lstat"><div class="lstat-num">14</div><div class="lstat-label" data-i18n="lib.stat.languages">Languages</div></div>
     </div>
   </div>
 </div>
@@ -301,14 +301,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:72px;padding:0 5%;dis
     <!-- SIDEBAR -->
     <aside class="sidebar">
       <div class="sb-search">
-        <input type="text" id="searchInput" placeholder="Search diseases, crops…" oninput="applyFilters()">
+        <input type="text" id="searchInput" data-i18n-placeholder="lib.search.placeholder" placeholder="Search diseases, crops…" oninput="applyFilters()">
         <i class="fas fa-search"></i>
       </div>
 
       <div class="filter-group">
-        <div class="fg-label"><i class="fas fa-seedling"></i>Crop</div>
+        <div class="fg-label"><i class="fas fa-seedling"></i><span data-i18n="lib.filter.crop">Crop</span></div>
         <div class="filter-chips" id="cropFilters">
-          <button class="chip active" onclick="toggleFilter(this,'crop','all')">All</button>
+          <button class="chip active" onclick="toggleFilter(this,'crop','all')" data-i18n="lib.filter.all">All</button>
           <button class="chip" onclick="toggleFilter(this,'crop','wheat')">Wheat</button>
           <button class="chip" onclick="toggleFilter(this,'crop','rice')">Rice</button>
           <button class="chip" onclick="toggleFilter(this,'crop','tomato')">Tomato</button>
@@ -325,43 +325,43 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:72px;padding:0 5%;dis
       </div>
 
       <div class="filter-group">
-        <div class="fg-label"><i class="fas fa-dna"></i>Disease type</div>
+        <div class="fg-label"><i class="fas fa-dna"></i><span data-i18n="lib.filter.type">Disease type</span></div>
         <div class="filter-chips" id="typeFilters">
-          <button class="chip active" onclick="toggleFilter(this,'type','all')">All</button>
-          <button class="chip" onclick="toggleFilter(this,'type','fungal')">🍄 Fungal</button>
-          <button class="chip" onclick="toggleFilter(this,'type','bacterial')">🦠 Bacterial</button>
-          <button class="chip" onclick="toggleFilter(this,'type','viral')">⚡ Viral</button>
-          <button class="chip" onclick="toggleFilter(this,'type','pest')">🐛 Pest</button>
-          <button class="chip" onclick="toggleFilter(this,'type','nutrient')">🌱 Nutrient</button>
+          <button class="chip active" onclick="toggleFilter(this,'type','all')" data-i18n="lib.filter.all">All</button>
+          <button class="chip" onclick="toggleFilter(this,'type','fungal')" data-i18n="lib.filter.fungal">🍄 Fungal</button>
+          <button class="chip" onclick="toggleFilter(this,'type','bacterial')" data-i18n="lib.filter.bacterial">🦠 Bacterial</button>
+          <button class="chip" onclick="toggleFilter(this,'type','viral')" data-i18n="lib.filter.viral">⚡ Viral</button>
+          <button class="chip" onclick="toggleFilter(this,'type','pest')" data-i18n="lib.filter.pest">🐛 Pest</button>
+          <button class="chip" onclick="toggleFilter(this,'type','nutrient')" data-i18n="lib.filter.nutrient">🌱 Nutrient</button>
         </div>
       </div>
 
       <div class="filter-group">
-        <div class="fg-label"><i class="fas fa-thermometer-half"></i>Severity</div>
+        <div class="fg-label"><i class="fas fa-thermometer-half"></i><span data-i18n="lib.filter.severity">Severity</span></div>
         <div class="filter-chips" id="sevFilters">
-          <button class="chip active" onclick="toggleFilter(this,'sev','all')">All</button>
-          <button class="chip chip-sev-h" onclick="toggleFilter(this,'sev','high')"><i class="fas fa-exclamation-triangle" style="font-size:9px"></i>High</button>
-          <button class="chip chip-sev-m" onclick="toggleFilter(this,'sev','medium')"><i class="fas fa-minus" style="font-size:9px"></i>Medium</button>
-          <button class="chip chip-sev-l" onclick="toggleFilter(this,'sev','low')"><i class="fas fa-check" style="font-size:9px"></i>Low</button>
+          <button class="chip active" onclick="toggleFilter(this,'sev','all')" data-i18n="lib.filter.all">All</button>
+          <button class="chip chip-sev-h" onclick="toggleFilter(this,'sev','high')"><i class="fas fa-exclamation-triangle" style="font-size:9px"></i><span data-i18n="lib.filter.sev.high">High</span></button>
+          <button class="chip chip-sev-m" onclick="toggleFilter(this,'sev','medium')"><i class="fas fa-minus" style="font-size:9px"></i><span data-i18n="lib.filter.sev.medium">Medium</span></button>
+          <button class="chip chip-sev-l" onclick="toggleFilter(this,'sev','low')"><i class="fas fa-check" style="font-size:9px"></i><span data-i18n="lib.filter.sev.low">Low</span></button>
         </div>
       </div>
 
       <div class="sidebar-cta">
-        <h4>Can't find it?</h4>
-        <p>Use our AI to diagnose any unknown disease from a photo in 3 seconds.</p>
-        <a href="cropsense_v2.html#diagnose"><i class="fas fa-microscope" style="margin-right:6px"></i>Run AI Diagnosis</a>
+        <h4 data-i18n="lib.cta.title">Can't find it?</h4>
+        <p data-i18n="lib.cta.desc">Use our AI to diagnose any unknown disease from a photo in 3 seconds.</p>
+        <a href="index.html"><i class="fas fa-microscope" style="margin-right:6px"></i><span data-i18n="lib.cta.btn">Run AI Diagnosis</span></a>
       </div>
     </aside>
 
     <!-- GRID -->
     <div>
       <div class="lib-topbar reveal">
-        <div class="lib-count">Showing <strong id="visibleCount">0</strong> diseases</div>
+        <div class="lib-count"><span data-i18n="lib.showing">Showing</span> <strong id="visibleCount">0</strong> <span data-i18n="lib.topbar.count">diseases</span></div>
         <div style="display:flex;align-items:center;gap:12px;">
           <select class="sort-select" id="sortSelect" onchange="applyFilters()">
-            <option value="name">Sort: A–Z</option>
-            <option value="severity">Sort: Severity</option>
-            <option value="crop">Sort: Crop</option>
+            <option value="name" data-i18n="lib.sort.az">Sort: A–Z</option>
+            <option value="severity" data-i18n="lib.sort.sev">Sort: Severity</option>
+            <option value="crop" data-i18n="lib.sort.crop">Sort: Crop</option>
           </select>
           <div class="view-toggle">
             <button class="vt-btn active" id="gridViewBtn" onclick="setView('grid')" title="Grid view"><i class="fas fa-th-large"></i></button>
@@ -792,17 +792,28 @@ function renderGrid(){
   const pageData=filteredData.slice((currentPage-1)*PAGE_SIZE,currentPage*PAGE_SIZE);
 
   if(filteredData.length===0){
-    grid.innerHTML=`<div class="empty-state"><i class="fas fa-search-minus"></i><h3>No diseases found</h3><p>Try different search terms or remove some filters.</p></div>`;
+    grid.innerHTML=`<div class="empty-state"><i class="fas fa-search-minus"></i><h3 data-i18n="lib.empty.title">No diseases found</h3><p data-i18n="lib.empty.desc">Try different search terms or remove some filters.</p></div>`;
+    i18nTranslate();
     document.getElementById('pagination').innerHTML='';
     return;
   }
 
   const lang = (window.i18nConfig && window.i18nConfig.currentLang) || 'en';
 
+  // Translate severity labels
+  const sevLabels = {
+    high: lang==='hi' ? 'उच्च गंभीरता' : 'High severity',
+    medium: lang==='hi' ? 'मध्यम' : 'Medium',
+    low: lang==='hi' ? 'कम / नियंत्रणयोग्य' : 'Low / Manageable'
+  };
+  const detailsLabel = lang==='hi' ? 'पूरी जानकारी' : 'Details';
+  const emptyTitle = lang==='hi' ? 'कोई बीमारी नहीं मिली' : 'No diseases found';
+  const emptyDesc = lang==='hi' ? 'अलग खोज शब्द आजमाएं या कुछ फ़िल्टर हटाएं।' : 'Try different search terms or remove some filters.';
+
   grid.innerHTML=pageData.map((d,i)=>{
     const sevClass=d.sev==='high'?'sp-h':d.sev==='medium'?'sp-m':'sp-l';
     const sevIcon=d.sev==='high'?'exclamation-triangle':d.sev==='medium'?'minus':'check';
-    const sevLabel=d.sev==='high'?'High severity':d.sev==='medium'?'Medium':'Low / Manageable';
+    const sevLabel=sevLabels[d.sev]||d.sev;
     const isFaved=favorites.has(d.id);
     const dName = lang === 'hi' && d.name_hi ? d.name_hi : d.name;
     const dDesc = lang === 'hi' && d.desc_hi ? d.desc_hi : d.desc;
@@ -820,7 +831,7 @@ function renderGrid(){
         <div class="dcard-desc">${dDesc}</div>
         <div class="dcard-footer">
           <span class="sev-pill ${sevClass}"><i class="fas fa-${sevIcon}" style="font-size:8px"></i>${sevLabel}</span>
-          <a class="dcard-btn" href="javascript:void(0)" onclick="openModal(${d.id})">Details <i class="fas fa-arrow-right" style="font-size:10px"></i></a>
+          <a class="dcard-btn" href="javascript:void(0)" onclick="openModal(${d.id})">${detailsLabel} <i class="fas fa-arrow-right" style="font-size:10px"></i></a>
         </div>
       </div>
     </div>`;
@@ -829,7 +840,10 @@ function renderGrid(){
   renderPagination(totalPages);
 }
 
-document.addEventListener('languageChanged', renderGrid);
+document.addEventListener('languageChanged', () => {
+  i18nTranslate();
+  renderGrid();
+});
 
 /* ── PAGINATION ── */
 function renderPagination(total){
